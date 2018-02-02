@@ -3,13 +3,9 @@ package organizer
 class UrlMappings {
 
     static mappings = {
-        "/$controller/$action?/$id?(.$format)?"{
-            constraints {
-                // apply constraints here
-            }
-        }
 
-        "/"(view:"/index")
+        // Page url mapping
+        "/"(view:"/application/landing")
         "500"(view:'/error')
         "404"(view:'/notFound')
     }
