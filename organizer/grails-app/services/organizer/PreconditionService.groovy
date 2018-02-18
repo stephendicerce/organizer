@@ -34,7 +34,7 @@ class PreconditionService {
         results
     }
 
-    QueryResult<AuthToken> acessToken(String accessTokenString, QueryResult<AuthToken> results = new QueryResult<>(success: true)) {
+    QueryResult<AuthToken> accessToken(String accessTokenString, QueryResult<AuthToken> results = new QueryResult<>(success: true)) {
 
         if(!results || !accessTokenString) {
             results = new QueryResult(success: false)
