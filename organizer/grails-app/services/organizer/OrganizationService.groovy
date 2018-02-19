@@ -27,7 +27,14 @@ class OrganizationService {
     }
     */
 
-
+/**
+ *
+ * @param token
+ * @param description
+ * @param name
+ * @param result
+ * @return
+ */
     QueryResult<Organization> createOrganization(AuthToken token, String description, String name, QueryResult<Organization> result = new QueryResult<>(success: true)) {
         User orgAdmin = token?.user
         if(isOrgAdmin(orgAdmin.role)) {
@@ -40,6 +47,12 @@ class OrganizationService {
         result
     }
 
+    /**
+     *
+     * @param token
+     * @param organizationId
+     * @return
+     */
     QueryResult<Organization> deleteOrganization(AuthToken token, String organizationId) {
         QueryResult<Organization> res = new QueryResult<>()
         User requestingUser = token?.user
@@ -61,14 +74,30 @@ class OrganizationService {
         }
     }
 
+    /**
+     *
+     * @param token
+     * @return
+     */
     QueryResult<List<Organization>> getAllOrganizations(AuthToken token) {
 
     }
 
+    /**
+     *
+     * @param token
+     * @param organization_id
+     * @return
+     */
     QueryResult<List<Organization>> getAllOrganizations(AuthToken token, String organization_id) {
 
     }
 
+    /**
+     *
+     * @param role
+     * @return
+     */
     private boolean isOrgAdmin(Role role) {
         role.type == RoleType.ORGANIZATIONADMIN
     }
