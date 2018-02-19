@@ -27,4 +27,36 @@ class OrganizationController {
             render(view: '../failure', model: [errorCode: require.errorCode, message: require.message])
         }
     }
+
+    def postOrganization(String access_token, String description, String name) {
+        def require = preconditionService.notNull(params, ["access_token", "description", "name"])
+        def token = preconditionService.accessToken(access_token, require).data
+
+        if(require.success) {
+            def result = organizationService.createOrganization(token, description, name)
+            if(result.success) {
+                render(view: 'newOrganization', model: [organization: result.data])
+            } else {
+                render(view: '../failure', model: [errorCode: result.errorCode, message: result.message])
+            }
+        } else {
+            render(view: '../failure', model: [errorCode: require.errorCode, message: require.message])
+        }
+    }
+
+    def deleteOrganization(String access_token, String organization_id) {
+        def require = preconditionService.notNull(params, ["access_token", "organization_id"])
+        def token = preconditionService.accessToken(access_token,require).data
+
+        if(require.success) {
+            def result = organizationService.deleteOrganization(token, organization_id)
+            if(result.success) {
+                render(view: 'deleteResult', model: [token: token])
+            } else {
+                render(view: '../failure', model: [errorCode: result.errorCode, message: result.message])
+            }
+        } else {
+            render(view: '../failure', model: [errorCode: require.errorCode, message: require.message])
+        }
+    }
 }

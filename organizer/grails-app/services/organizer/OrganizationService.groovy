@@ -30,7 +30,7 @@ class OrganizationService {
 
     QueryResult<Organization> createOrganization(AuthToken token, String description, String name, QueryResult<Organization> result = new QueryResult<>(success: true)) {
         User orgAdmin = token?.user
-        if(isOrganizationAdmin(orgAdmin.role)) {
+        if(isOrgAdmin(orgAdmin.role)) {
             Organization organization = new Organization(name: name, description: description)
             organization.save(flush: true, failOnError: true)
             result.data = organization
@@ -38,5 +38,38 @@ class OrganizationService {
             QueryResult.fromHttpStatus(HttpStatus.BAD_REQUEST, result)
         }
         result
+    }
+
+    QueryResult<Organization> deleteOrganization(AuthToken token, String organizationId) {
+        QueryResult<Organization> res = new QueryResult<>()
+        User requestingUser = token?.user
+        long oid = organizationId.isLong() ? organizationId.toLong() : -1
+
+        if(requestingUser != null && isOrgAdmin(requestingUser.role) && oid != -1) {
+            Organization organization = Organization.findById(oid)
+            if(organization != null) {
+                if(isAdminOf(requestingUser, organization)) {
+                    doDelete(organization, res)
+                } else {
+                    QueryResult.fromHttpStatus(HttpStatus.UNAUTHORIZED, res)
+                }
+            } else {
+                QueryResult.fromHttpStatus(HttpStatus.BAD_REQUEST, res)
+            }
+        } else {
+            QueryResult.fromHttpStatus(HttpStatus.UNAUTHORIZED)
+        }
+    }
+
+    QueryResult<List<Organization>> getAllOrganizations(AuthToken token) {
+
+    }
+
+    QueryResult<List<Organization>> getAllOrganizations(AuthToken token, String organization_id) {
+
+    }
+
+    private boolean isOrgAdmin(Role role) {
+        role.type == RoleType.ORGANIZATIONADMIN
     }
 }
