@@ -20,6 +20,11 @@ class VerifierService {
 
     GrailsApplication grailsApplication
 
+    /**
+     * Method to get verification results for an id token string
+     * @param idTokenString the string based id token to be verified
+     * @return An object containing information about the verification of the requesting user
+     */
     QueryResult<GoogleIdToken> getVerifiedResults(String idTokenString) {
         QueryResult<GoogleIdToken> data = new QueryResult<>()
         verifyIdToken(idTokenString, data)
@@ -28,6 +33,11 @@ class VerifierService {
         data
     }
 
+    /**
+     * A method to verify the id token using google's own api
+     * @param idTokenString a string representing the id token to check
+     * @param data the object which the results will get sent to
+     */
     private void verifyIdToken(String idTokenString, QueryResult<GoogleIdToken> data) {
 
         if(!data.success) {
@@ -61,6 +71,10 @@ class VerifierService {
 
     }
 
+    /**
+     * A method to check the integrity of the token data by checking against the issuer and audience
+     * @param data the object which the results will get sent to
+     */
     private void verifyIdTokenIntegrity(QueryResult<GoogleIdToken> data) {
 
         if (!data.success || data.data == null) {
@@ -83,6 +97,10 @@ class VerifierService {
         }
     }
 
+    /**
+     * verifies the requesting user's email
+     * @param data the object which the results will get sent to
+     */
     private void verifyEmail(QueryResult<GoogleIdToken> data) {
         if(!data.success || data.data == null) {
             return
