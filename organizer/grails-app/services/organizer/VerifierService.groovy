@@ -1,7 +1,6 @@
 package organizer
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.jackson2.JacksonFactory
@@ -9,8 +8,6 @@ import grails.core.GrailsApplication
 import grails.gorm.transactions.Transactional
 import org.springframework.http.HttpStatus
 import util.QueryResult
-
-import javax.validation.Payload
 
 @Transactional
 class VerifierService {
@@ -66,6 +63,13 @@ class VerifierService {
 
     private void verifyIdTokenIntegrity(QueryResult<GoogleIdToken> data) {
 
+        if (!data.success || data.data == null) {
+            return
+        }
+
+        GoogleIdToken token = data.data
+        def passed = false
+
         if(token.verifyAudience([grailsApplication.config.getProperty("googleauth.clientId")])) {
             if(token.verifyIssuer(grailsApplication.config.getProperty("googleauth.issuer"))) {
                 passed = true
@@ -83,7 +87,7 @@ class VerifierService {
         if(!data.success || data.data == null) {
             return
         }
-        Payload payload = data.data.payload
+        GoogleIdToken.Payload payload = data.data.payload
         Boolean passed = false
 
         if(payload.getEmailVerified()) {

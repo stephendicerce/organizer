@@ -30,6 +30,7 @@ repositories {
 }
 
 dependencies {
+    compile 'com.google.api-client:google-api-client:1.22.0'
     compile "org.springframework.boot:spring-boot-starter-logging"
     compile "org.springframework.boot:spring-boot-autoconfigure"
     compile "org.grails:grails-core"

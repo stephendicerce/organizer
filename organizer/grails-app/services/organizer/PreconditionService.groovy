@@ -11,7 +11,7 @@ class PreconditionService {
     QueryResult notNull(GrailsParameterMap paramsMap, List<String> parameters, QueryResult results = new QueryResult(success: true)) {
 
         if(!results || !paramsMap || !parameters) {
-            reults = new QueryResult(success: false)
+            results = new QueryResult(success: false)
             results.message = "Null precondition parameters"
         }
         if(!results.success) {
