@@ -89,34 +89,40 @@ endpoints:
 hibernate:
     cache:
         queries: false
-        use_second_level_cache: false
+        use_second_level_cache: true
         use_query_cache: false
+
+
+googleauth:
+        clientId: 578019460076-9h535196sj93sernlo2l09njo22fcn2e.apps.googleusercontent.com
+        issuer: accounts.google.com
+
 dataSource:
     pooled: true
     jmxExport: true
-    driverClassName: org.h2.Driver
-    username: sa
-    password: ''
+    driverClassName: com.mysql.jdbc.Driver
+    dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 
 environments:
     development:
         dataSource:
             dbCreate: create-drop
-            url: jdbc:mysql://localhost:3306/organizerdb
-            username: organizerdbuser
-            password: organizerdbpassword
+            url: jdbc:mysql://localhost:3306/skeddb
+            username: skeddbuser
+            password: skeddbpassword
+
     test:
         dataSource:
             dbCreate: update
-            url: jdbc:mysql://localhost:3306/organizerdb
-            username: organizerdbuser
-            password: organizerdbpassword
+            url: jdbc:mysql://localhost:3306/skeddb
+            username: skeddbuser
+            password: skeddbpassword
     production:
         dataSource:
             dbCreate: none
-            url: mysql://localhost:3306/organizerdb
-            username: organizerdbuser
-            password: organizerdbpassword
+            url: jdbc:mysql://localhost:3306/skeddb
+            username: skeddbuser
+            password: skeddbpassword
             properties:
                 jmxEnabled: true
                 initialSize: 5

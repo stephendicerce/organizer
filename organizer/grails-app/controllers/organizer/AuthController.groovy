@@ -6,7 +6,7 @@ import util.QueryResult
 
 
 class AuthController {
-    static respopnseFormats = ['json', 'xml']
+    static responseFormats = ['json', 'xml']
 
     VerifierService verifierService
     UserService userService
@@ -14,7 +14,7 @@ class AuthController {
     def auth(String idToken) {
         QueryResult<GoogleIdToken> data = verifierService.getVerifiedResults(idToken)
         if(data.success) {
-            GoogleIdToken.Payload payload = data.payload
+            GoogleIdToken.Payload payload = data.data.payload
             String subj = payload.getSubject()
             String first = payload.get("given_name").toString()
             String last = payload.get("family_name").toString()

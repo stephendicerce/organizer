@@ -9,7 +9,7 @@ class User {
 
     static hasOne = [authToken: AuthToken, role: Role, calender: Calender]
 
-    static hasMany = [organizations: Organization, friends: User]
+    static hasMany = [friends: User]
 
     static mapping = {
         table "users"

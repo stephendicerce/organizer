@@ -59,7 +59,7 @@ class UserController {
             if(user_id == null) {
                 result = roleService.getUserRole(checks.data)
             } else {
-                QueryResult = numCheck = preconditionService.convertToLong(user_id, 'user_id')
+                QueryResult  numCheck = preconditionService.convertToLong(user_id, 'user_id')
                 result = numCheck.success ? roleService.getUserRole(checks.data, numCheck.data) : numCheck
             }
 
@@ -74,7 +74,7 @@ class UserController {
     }
 
     def putUserRole(String access_token, String current, String master, String email) {
-        QueryResult<AuthToken> checks = QueryResult()
+        QueryResult<AuthToken> checks = new QueryResult<>()
         preconditionService.notNull(params, ['access_token'], checks)
         preconditionService.accessToken(access_token, checks)
 
