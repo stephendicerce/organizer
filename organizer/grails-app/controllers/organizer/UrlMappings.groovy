@@ -5,7 +5,22 @@ class UrlMappings {
     static mappings = {
 
         // Page url mapping
-        "/"(view:"/application/landing")
+        "/"(controller: 'application', action: 'landing')
+        "/dashboard"(controller: 'application', action: "dashboard")
+
+
+        "/user/auth"(controller: 'auth', action: 'auth', method: 'post')
+        "/user/auth"(controller: 'auth', action: 'current', method: 'get')
+        "/user/logout"(controller: 'auth', action: 'logout', method: 'post')
+
+
+
+
+
+
+
+
+
         "500"(view:'/error')
         "404"(view:'/notFound')
     }
