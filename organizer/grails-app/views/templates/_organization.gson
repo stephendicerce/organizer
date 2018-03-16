@@ -1,0 +1,12 @@
+import organizer.Organization
+
+model {
+    Organization organization
+}
+
+json {
+    id organization.id
+    name organization.name
+    description organization.description
+    members ((organization.users != null) ? organization.users.size() : 0)
+}

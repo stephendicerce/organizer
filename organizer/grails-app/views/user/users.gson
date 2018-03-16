@@ -1,0 +1,15 @@
+import organizer.AuthToken
+import organizer.User
+
+model {
+    AuthToken token
+    Collection<User> users
+}
+
+json {
+    success true
+    data {
+        accessToken token.accessToken
+        users g.render(template: "/templates/users", model: [users: users])
+    }
+}

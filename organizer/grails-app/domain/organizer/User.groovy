@@ -7,13 +7,13 @@ class User {
     String email
     String imageUrl
 
-    static hasOne = [authToken: AuthToken, role: Role, calender: Calender]
+    static hasOne = [authToken: AuthToken, role: Role]
 
     static hasMany = [friends: User]
 
     static mapping = {
-        table "users"
-        version false
+       /* table "users"
+        version false*/
     }
     static constraints = {
         firstName nullable: true

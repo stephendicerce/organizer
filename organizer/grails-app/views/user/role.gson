@@ -1,0 +1,28 @@
+import org.grails.web.json.JSONArray
+import organizer.AuthToken
+import organizer.Role
+import util.RoleType
+
+model {
+    AuthToken token
+    Role role
+}
+
+json {
+    success true
+    data {
+        accessToken token.accessToken
+        role {
+            current role.type
+
+            JSONArray array = new JSONArray()
+            array.add(RoleType.USER.toString())
+
+            if (role.master == RoleType.ORGANIZATIONADMIN) {
+                array.add(RoleType.ORGANIZATIONADMIN.toString())
+                array.add(RoleType.USER.toString())
+            }
+            available array
+        }
+    }
+}

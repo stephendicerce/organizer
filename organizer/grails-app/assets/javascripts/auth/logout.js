@@ -3,6 +3,7 @@ function signOut() {
     auth2.signOut().then(function () {
 
         alert("You have successfully logged out!");
-        $(".g-signin2").css("display", "none");
+        $(".g-signin2").css("display", "block");
+        $(".data").css("display", "none")
     });
 }
