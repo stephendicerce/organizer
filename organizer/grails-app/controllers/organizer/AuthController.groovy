@@ -12,6 +12,7 @@ class AuthController {
     UserService userService
 
     def auth(String idToken) {
+        //println "auth"
         QueryResult<GoogleIdToken> data = verifierService.getVerifiedResults(idToken)
         if(data.success) {
             GoogleIdToken.Payload payload = data.data.payload
@@ -20,6 +21,10 @@ class AuthController {
             String last = payload.get("family_name").toString()
             String imageUrl = payload.get("picture").toString()
             String email = payload.getEmail()
+
+            //println first
+            //println last
+            //println email
 
             Optional<Pair<User, AuthToken>> optionalInfo = userService.getMakeOrUpdate(subj, first, last, imageUrl, email)
 
@@ -36,6 +41,7 @@ class AuthController {
     }
 
     def current() {
+        //println "current"
         String token = session.getAttribute("access").toString()
         if(token != null) {
             QueryResult<User> result = userService.getUser(token)
@@ -50,6 +56,7 @@ class AuthController {
     }
 
     def logout() {
+        //println "logout"
         String access = session.getAttribute("access")
         if(access != null) {
             session.removeAttribute("access")

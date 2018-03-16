@@ -38,7 +38,7 @@ class UserController {
         preconditionService.accessToken(access_token, checks)
 
         if(checks.success) {
-            QueryResult<User> result = userService.createUser(checks.data, email, role)
+            QueryResult<User> result = userService.createUser(email, role)
             if(result.success) {
                 render(view: 'users', model: [token: checks.data, users: [result.data]])
             } else {
@@ -78,7 +78,7 @@ class UserController {
         preconditionService.notNull(params, ['access_token'], checks)
         preconditionService.accessToken(access_token, checks)
 
-        if(chekcs.success) {
+        if(checks.success) {
             QueryResult result
 
             if(current != null) {

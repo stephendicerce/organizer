@@ -50,25 +50,31 @@ class UserService {
         return user
     }
 
-    Optional<Pair<User, AuthToken>> getMakeOrUpdate(String subj, String first, String last, String imageUrl, String email) {
+    Optional<Pair<User, AuthToken>> getMakeOrUpdate(String subj, String first, String last,
+                                                    String imageUrl, String email) {
         User user
         AuthToken token
 
         token = AuthToken.findBySubject(subj)
 
-        if(token != null) {
+        // we have found an auth object. Therefore we have this user and they've signed in before.
+        if (token != null) {
             user = token.user
-            if(user.email != email) {
+            if (user.email != email) {
                 user.email = email
             }
             token.accessToken = UUID.randomUUID()
             token.save(flush: true, failOnError: true)
         } else {
-            user.findByEmail(email)
-            if(user == null) {
+            // two possible situations here. This is a new user or it's a pre-loaded user
+            //signing in for the first time.
+
+            user = User.findByEmail(email)
+            if (user == null) { //it's a new user
                 user = new User(firstName: first, lastName: last, imageUrl: imageUrl, email: email)
                 user.setRole(new Role(type: RoleType.USER, master: RoleType.USER))
             } else {
+                //we've found the pre-loaded user, set their values to the ones active the g profile
                 user.firstName = first
                 user.lastName = last
                 user.imageUrl = imageUrl
@@ -76,7 +82,7 @@ class UserService {
         }
 
         user = user.save(flush: true, failOnError: true)
-        if(user.authToken == null) {
+        if (user.authToken == null) {
             user.setAuthToken(new AuthToken(subject: subj, accessToken: UUID.randomUUID()))
             user = user.save(flush: true, failOnError: true)
         }
@@ -84,10 +90,11 @@ class UserService {
         token = user.authToken
 
         user != null ? Optional.of(new Pair<User, AuthToken>(user, token))
-                :Optional.empty()
+                : Optional.empty()
+
     }
 
-    QueryResult<User> createUser(AuthToken token, String email, String role) {
+    QueryResult<User> createUser(String email, String role) {
         QueryResult<User> result
         if(User.findByEmail(email) == null) {
             RoleType roleType

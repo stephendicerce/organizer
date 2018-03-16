@@ -37,13 +37,10 @@ class OrganizationService {
  */
     QueryResult<Organization> createOrganization(AuthToken token, String description, String name, QueryResult<Organization> result = new QueryResult<>(success: true)) {
         User orgAdmin = token?.user
-        if(isOrgAdmin(orgAdmin.role)) {
-            Organization organization = new Organization(name: name, description: description)
+            Organization organization = new Organization(name: name, description: description, admin: orgAdmin)
             organization.save(flush: true, failOnError: true)
             result.data = organization
-        } else {
-            QueryResult.fromHttpStatus(HttpStatus.BAD_REQUEST, result)
-        }
+
         result
     }
 
