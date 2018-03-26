@@ -1,7 +1,6 @@
 package organizer
 
 import grails.gorm.transactions.Transactional
-import org.springframework.boot.actuate.autoconfigure.ShellProperties
 import org.springframework.http.HttpStatus
 import util.Pair
 import util.QueryResult
@@ -54,34 +53,39 @@ class UserService {
                                                     String imageUrl, String email) {
         User user
         AuthToken token
+        Calendar calendar
 
         token = AuthToken.findBySubject(subj)
 
         // we have found an auth object. Therefore we have this user and they've signed in before.
         if (token != null) {
+            println "user located"
             user = token.user
+            calendar = user.calendar
             if (user.email != email) {
                 user.email = email
             }
             token.accessToken = UUID.randomUUID()
             token.save(flush: true, failOnError: true)
         } else {
+            //println "new or pre-loaded user"
             // two possible situations here. This is a new user or it's a pre-loaded user
             //signing in for the first time.
 
             user = User.findByEmail(email)
             if (user == null) { //it's a new user
-                user = new User(firstName: first, lastName: last, imageUrl: imageUrl, email: email)
+                println "new user"
+                calendar = new Calendar()
+                user = new User(firstName: first, lastName: last, imageUrl: imageUrl, email: email, calendar: calendar)
                 user.setRole(new Role(type: RoleType.USER, master: RoleType.USER))
             } else {
-                //we've found the pre-loaded user, set their values to the ones active the g profile
-                user.firstName = first
-                user.lastName = last
-                user.imageUrl = imageUrl
+                println "no user found."
             }
         }
-
-        user = user.save(flush: true, failOnError: true)
+        if(calendar != null) {
+            user = user.save(flush: true, failOnError: true)
+            calendar.save(flush: true, failOnError: true)
+        }
         if (user.authToken == null) {
             user.setAuthToken(new AuthToken(subject: subj, accessToken: UUID.randomUUID()))
             user = user.save(flush: true, failOnError: true)
@@ -92,6 +96,29 @@ class UserService {
         user != null ? Optional.of(new Pair<User, AuthToken>(user, token))
                 : Optional.empty()
 
+    }
+
+    QueryResult<List<User>> findUsersBy(AuthToken token, String first, String last, String email) {
+        QueryResult<List<User>> result
+
+
+        def users = User.createCriteria().list {
+            if (first) {
+                like('firstName', first.concat("%"))
+            }
+
+            if (last) {
+                like('lastName', last.concat("%"))
+            }
+
+            if (email) {
+                eq('email', email.concat("%"))
+            }
+        } as List<User>
+
+        result = new QueryResult<>(success: true, data: users)
+
+        result
     }
 
     QueryResult<User> createUser(String email, String role) {

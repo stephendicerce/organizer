@@ -6,6 +6,7 @@ class User {
     String lastName
     String email
     String imageUrl
+    Calendar calendar
 
     static hasOne = [authToken: AuthToken, role: Role]
 

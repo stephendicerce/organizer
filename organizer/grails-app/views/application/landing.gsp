@@ -34,13 +34,6 @@
                     <h1>Sked</h1>
                     <h3>An everyday task manager to be used by you and your friends. Keep up to date with everyone's plans, as well as keeping on schedule with your own.</h3>
                     <div align="center" id="sign-in-btn"></div>
-                    <div class="data">
-                        <p>Profile Details</p>
-                        <img id="pic" class="img-circle" width="100" height="100"/>
-                        <p>Email Address</p>
-                        <p id="email" class="alert alert-danger"></p>
-                        <button onclick="signOut()" class="btn btn-danger">Sign Out</button>
-                    </div>
                 </div>
             </div>
         </div>

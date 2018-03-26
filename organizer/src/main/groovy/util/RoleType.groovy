@@ -2,5 +2,6 @@ package util
 
 enum RoleType {
     USER,
-    ORGANIZATIONADMIN
+    ORGANIZATIONADMIN,
+    ORGANIZATIONOWNER
 }

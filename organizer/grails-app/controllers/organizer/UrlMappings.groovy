@@ -13,6 +13,12 @@ class UrlMappings {
         "/user/auth"(controller: 'auth', action: 'current', method: 'get')
         "/user/logout"(controller: 'auth', action: 'logout', method: 'post')
 
+        group "/api/organization", {
+            "/"(controller: 'organization', action: 'postOrganization', method: 'post')
+            "/"(controller: 'organization', action: 'organizationGet', method: 'get')
+            "/"(controller: 'organization', action: 'deleteOrganization', method: 'delete')
+        }
+
 
 
 

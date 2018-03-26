@@ -67,10 +67,29 @@ class OrganizationService {
                 QueryResult.fromHttpStatus(HttpStatus.BAD_REQUEST, res)
             }
         } else {
-            QueryResult.fromHttpStatus(HttpStatus.UNAUTHORIZED)
+            QueryResult.fromHttpStatus(HttpStatus.UNAUTHORIZED, res)
         }
     }
 
+    /**
+     *
+     * @param organization
+     * @param result
+     * @return
+     */
+    private QueryResult<Organization> doDelete(Organization organization, QueryResult<Organization> result = new QueryResult<>(success: true)) {
+
+    }
+
+    private boolean isAdminOf(User user, Organization organization) {
+        long userId = user.id
+        long organizationAdminId = organization.admin.id
+
+        if(userId == organizationAdminId)
+            true
+        else
+            false
+    }
     /**
      *
      * @param token

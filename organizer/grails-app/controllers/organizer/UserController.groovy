@@ -11,14 +11,14 @@ class UserController {
     UserService userService
     RoleService roleService
 
-    def getUser(String access_token, String first_name, String email) {
+    def getUser(String access_token, String first_name, String last_name, String email) {
         QueryResult<AuthToken> checks = new QueryResult<>()
         preconditionService.notNull(params, ['access_token'], checks)
         preconditionService.accessToken(access_token, checks)
 
         if(checks.success) {
             if(first_name || last_name || email) {
-                QueryResult<List<User>> queryResult = userService.finUsersBy(checks.data, first_name, last_name, email)
+                QueryResult<List<User>> queryResult = userService.findUsersBy(checks.data, first_name, last_name, email)
                 if(queryResult.success) {
                     render(view: 'users', model: [token: checks.data, users: queryResult.data])
                 } else {

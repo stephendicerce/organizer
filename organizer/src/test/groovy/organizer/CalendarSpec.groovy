@@ -3,7 +3,7 @@ package organizer
 import grails.testing.gorm.DomainUnitTest
 import spock.lang.Specification
 
-class CalenderSpec extends Specification implements DomainUnitTest<Calender> {
+class CalendarSpec extends Specification implements DomainUnitTest<Calendar> {
 
     def setup() {
     }
