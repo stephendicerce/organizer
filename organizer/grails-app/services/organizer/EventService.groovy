@@ -112,6 +112,55 @@ class EventService {
         result
     }
 
+    QueryResult<Event> editEvent(String eventID, AuthToken token, String orgId, String name, String description, String startingMonth, String startingDay, String startingYear, String dueMonth, String dueDay, String dueYear, String dueMinute, String dueHour, String color, QueryResult<Event> res = new QueryResult<>(success: true)) {
+        User requestingUser = token?.user
+        Long eID = eventID.isLong() ? eventID.toLong() : -1
+        Event event = Event.findById(eID)
+
+        int startMonth = startingMonth.isInteger() ? startingMonth.toInteger() : event.startingMonth
+        int startDay = startingDay.isInteger() ? startingMonth.toInteger() : event.startingDay
+        int startYear = startingYear.isInteger() ? startingYear.toInteger() : event.startingYear
+        int monthDue = dueMonth.isInteger() ? dueMonth.toInteger() : event.dueMonth
+        int dayDue = dueDay.isInteger() ? dueDay.toInteger() : event.dueDay
+        int yearDue = dueYear.isInteger() ? dueYear.toInteger() : event.dueYear
+        int minuteDue = dueMinute.toInteger() ? dueMinute.toInteger() : event.dueMinute
+        int hourDue = dueHour.isInteger() ? dueHour.toInteger() : event.dueHour
+
+        if(event != null) {
+            if (requestingUser != null) {
+                if((event.user.id == requestingUser.id) ||((event.organization.id != null) && (canUserCreateOrgEvent(event.organization, requestingUser)))) {
+                    if (!event.name.equals(name))
+                        event.name = name
+                    if (!event.description.equals(description))
+                        event.description = description
+                    if (event.startingMonth != startMonth)
+                        event.startingMonth = startMonth
+                    if (event.startingDay != startingDay)
+                        event.startingDay = startDay
+                    if (event.startingYear != startYear)
+                        event.startingYear = startYear
+                    if (event.dueMonth != monthDue)
+                        event.dueMonth = monthDue
+                    if (event.dueDay != dayDue)
+                        event.dueDay = dayDue
+                    if (event.dueYear != yearDue)
+                        event.dueYear = yearDue
+                    if (event.dueMinute != minuteDue)
+                        event.dueMinute = minuteDue
+                    if (event.dueHour != hourDue)
+                        event.dueHour = hourDue
+                    if (!event.color.equals(color))
+                        event.color = color
+                }
+            }
+        } else {
+            res = createEvent(token, orgId, name, description, startingMonth, startingDay, startingYear, dueMonth, dueDay, dueYear, dueMinute, dueHour, color, res)
+        }
+
+        res.data = event
+        res
+    }
+
     /**
      * A method to check if the User is part of an organization
      * @param organization The organization in question

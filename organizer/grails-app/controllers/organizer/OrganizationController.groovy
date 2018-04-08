@@ -57,7 +57,7 @@ class OrganizationController {
     }
 
     /**
-     * 
+     *
      * @param access_token
      * @param organization_id
      * @return
