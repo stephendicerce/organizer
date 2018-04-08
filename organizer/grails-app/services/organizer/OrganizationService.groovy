@@ -36,17 +36,17 @@ class OrganizationService {
  * @return
  */
     QueryResult<Organization> createOrganization(AuthToken token, String description, String name, QueryResult<Organization> result = new QueryResult<>(success: true)) {
-        User orgAdmin = token?.user
-            Organization organization = new Organization(name: name, description: description, admin: orgAdmin)
-            organization.save(flush: true, failOnError: true)
-            result.data = organization
+        User orgOwner = token?.user
+        Organization organization = new Organization(name: name, description: description, orgOwner: orgOwner, calendar: new Calendar())
+        organization.save(flush: true, failOnError: true)
+        result.data = organization
 
         result
     }
 
     /**
-     *
-     * @param token
+     * Method to delete the organization.
+     * @param token The requesting User's organization.
      * @param organizationId
      * @return
      */
@@ -55,10 +55,10 @@ class OrganizationService {
         User requestingUser = token?.user
         long oid = organizationId.isLong() ? organizationId.toLong() : -1
 
-        if(requestingUser != null && isOrgAdmin(requestingUser.role) && oid != -1) {
+        if(requestingUser != null && oid != -1) {
             Organization organization = Organization.findById(oid)
             if(organization != null) {
-                if(isAdminOf(requestingUser, organization)) {
+                if(isOwnerOf(requestingUser, organization)) {
                     doDelete(organization, res)
                 } else {
                     QueryResult.fromHttpStatus(HttpStatus.UNAUTHORIZED, res)
@@ -81,11 +81,11 @@ class OrganizationService {
 
     }
 
-    private boolean isAdminOf(User user, Organization organization) {
+    private boolean isOwnerOf(User user, Organization organization) {
         long userId = user.id
-        long organizationAdminId = organization.admin.id
+        long organizationOwnerId = organization.orgOwner.id
 
-        if(userId == organizationAdminId)
+        if(userId == organizationOwnerId)
             true
         else
             false
@@ -109,12 +109,5 @@ class OrganizationService {
 
     }
 
-    /**
-     *
-     * @param role
-     * @return
-     */
-    private boolean isOrgAdmin(Role role) {
-        role.type == RoleType.ORGANIZATIONADMIN
-    }
+
 }

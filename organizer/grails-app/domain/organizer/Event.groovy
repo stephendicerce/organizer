@@ -4,8 +4,12 @@ class Event {
 
     String name
     String description
-    Date startingDate
-    Date dueDate
+    int startingMonth
+    int startingDay
+    int startingYear
+    int dueMonth
+    int dueDay
+    int dueYear
     String dueHour
     String dueMinute
     String color
@@ -14,12 +18,19 @@ class Event {
 
 
     static constraints = {
-        startingDate nullable: true
+        name nullable: false
+        startingMonth nullable: true
+        startingDay nullable: true
+        startingYear nullable: true
         description nullable: true
         dueHour nullable: true
         dueMinute nullable: true
-        dueDate nullable: false
+        dueDay nullable: false
+        dueMonth nullable: false
+        dueYear nuallable:false
         color nullable: true
+        user nullable: true
+        organization nullable: true
     }
 
 }
