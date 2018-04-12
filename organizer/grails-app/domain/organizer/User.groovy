@@ -8,7 +8,7 @@ class User {
     String imageUrl
     Calendar calendar
 
-    static hasOne = [authToken: AuthToken, role: Role]
+    static hasOne = [authToken: AuthToken]
 
     static hasMany = [friends: User]
 

@@ -18,7 +18,7 @@ class UserController {
 
         if(checks.success) {
             if(first_name || last_name || email) {
-                QueryResult<List<User>> queryResult = userService.findUsersBy(checks.data, first_name, last_name, email)
+                QueryResult<List<User>> queryResult = userService.findUsersBy(first_name, last_name, email)
                 if(queryResult.success) {
                     render(view: 'users', model: [token: checks.data, users: queryResult.data])
                 } else {

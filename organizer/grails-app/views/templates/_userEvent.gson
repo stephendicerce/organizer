@@ -18,4 +18,5 @@ json {
     dueMinute event.dueMinute
     color event.color
     ownerId event.user.id
+    isPrivate event.isPrivate
 }

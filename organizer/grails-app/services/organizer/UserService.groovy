@@ -14,7 +14,6 @@ class UserService {
         final static String USER_NOT_FOUND = "User not found with given token"
     }
 
-    boolean checkIfOrganizationAdmin(User user) {user.role.type == RoleType.ORGANIZATIONADMIN}
 
     QueryResult<User> getUser(String token) {
         QueryResult queryResult = new QueryResult()
@@ -43,7 +42,6 @@ class UserService {
 
         if(user == null) {
             user = new User(email: email)
-            user.setRole(new Role(type: RoleType.USER, master: RoleType.USER))
             user.save(flush: true, failOnError: true)
         }
         return user
@@ -77,7 +75,6 @@ class UserService {
                 println "new user"
                 calendar = new Calendar()
                 user = new User(firstName: first, lastName: last, imageUrl: imageUrl, email: email, calendar: calendar)
-                user.setRole(new Role(type: RoleType.USER, master: RoleType.USER))
             } else {
                 println "no user found."
             }
@@ -98,7 +95,7 @@ class UserService {
 
     }
 
-    QueryResult<List<User>> findUsersBy(AuthToken token, String first, String last, String email) {
+    QueryResult<List<User>> findUsersBy(String first, String last, String email) {
         QueryResult<List<User>> result
 
 
@@ -121,22 +118,11 @@ class UserService {
         result
     }
 
-    QueryResult<User> createUser(String email, String role) {
+    QueryResult<User> createUser(String email) {
         QueryResult<User> result
         if(User.findByEmail(email) == null) {
-            RoleType roleType
-            if(role != null) {
-                try {
-                    roleType = role as RoleType
-                } catch (IllegalArgumentException e) {
-                    return new QueryResult<>(success: false, errorCode: HttpStatus.BAD_REQUEST.value(), message: "Unexpected role:" + role)
-                }
-            } else {
-                roleType = RoleType.USER
-            }
 
             User temp = new User(email: email)
-            temp.setRole(new Role(type: roleType, master: roleType))
             temp.save(flush: true)
             result = new QueryResult<>(success: true, data: temp)
         } else {

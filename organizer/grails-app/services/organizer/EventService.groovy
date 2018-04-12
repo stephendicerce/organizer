@@ -31,18 +31,14 @@ class EventService {
         int monthDue = dueMonth.isInteger() ? dueMonth.toInteger() : -1
         int dayDue = dueDay.isInteger() ? dueDay.toInteger() : -1
         int yearDue = dueYear.isInteger() ? dueYear.toInteger() : -1
-        boolean isPrivate
+        boolean isPublic
 
-        if(privacyString.equalsIgnoreCase("true"))
-            isPrivate = true
-        else
-            isPrivate = false
 
         Organization organization
 
         User user = token?.user
         if(user != null) {
-            Event event = new Event(name: name, dueMonth: monthDue, dueDay: dayDue, dueYear: yearDue, isPrivate: isPrivate)
+            Event event = new Event(name: name, dueMonth: monthDue, dueDay: dayDue, dueYear: yearDue, isPrivate: isPublic)
 
 
             if (description != null)
@@ -59,7 +55,14 @@ class EventService {
                 event.dueMinute = dueMinute.isInteger() ? dueMinute.toInteger() : -1
             if (color != null)
                 event.color = color
+            if(privacyString != null) {
+                if (privacyString.equalsIgnoreCase("true"))
+                    isPublic = true
+                else
+                    isPublic = false
 
+                event.isPublic = isPublic
+            }
             if (orgId != null) {
                 Long organizationId = orgId.isLong() ? orgId.toLong() : -1
                 organization = Organization.findById(organizationId)
@@ -111,7 +114,7 @@ class EventService {
      * @param result A QueryResult that can store data
      * @return The event
      */
-    QueryResult<Event> getEvent(AuthToken token, String eventId) {
+    QueryResult<Event> getUserEvent(AuthToken token, String eventId) {
         QueryResult<Event> result = new QueryResult<>(success: true)
         User requestingUser = token?.user
         Long eID = eventId.isLong() ? eventId.toLong() : -1
@@ -121,9 +124,6 @@ class EventService {
                 Event event = Event.findById(eID)
                 if (event.user != null) {
                     if (event.user.id == requestingUser.id)
-                        result.data = event
-                } else if (event.organization != null) {
-                    if (isInOrganization(event.organization, requestingUser))
                         result.data = event
                 } else {
                     QueryResult.fromHttpStatus(HttpStatus.BAD_REQUEST,result)
@@ -156,32 +156,40 @@ class EventService {
      * @param res
      * @return
      */
-    QueryResult<Event> editEvent(String eventID, AuthToken token, String orgId, String name, String description, String startingMonth, String startingDay, String startingYear, String dueMonth, String dueDay, String dueYear, String dueMinute, String dueHour, String color) {
+    QueryResult<Event> editEvent(String eventID, AuthToken token, String orgId, String name, String description, String startingMonth, String startingDay, String startingYear, String dueMonth, String dueDay, String dueYear, String dueMinute, String dueHour, String color, String privacyString) {
         QueryResult<Event> res = new QueryResult<>(success: true)
         User requestingUser = token?.user
         Long eID = eventID.isLong() ? eventID.toLong() : -1
         Event event = Event.findById(eID)
         int startMonth = event.startingMonth, startDay = event.startingDay, startYear = event.startingYear, monthDue = event.dueMonth
         int dayDue = event.dueDay, yearDue = event.dueYear, minuteDue = event.dueMinute, hourDue = event.dueHour
-
-        if(startingMonth != null)
-            startMonth = startingMonth.isInteger() ? startingMonth.toInteger() : event.startingMonth
-        if(startingDay != null)
-            startDay = startingDay.isInteger() ? startingMonth.toInteger() : event.startingDay
-        if(startingYear != null)
-            startYear = startingYear.isInteger() ? startingYear.toInteger() : event.startingYear
-        if(dueMonth != null)
-            monthDue = dueMonth.isInteger() ? dueMonth.toInteger() : event.dueMonth
-        if(dueDay != null)
-            dayDue = dueDay.isInteger() ? dueDay.toInteger() : event.dueDay
-        if(dueYear != null)
-            yearDue = dueYear.isInteger() ? dueYear.toInteger() : event.dueYear
-        if(dueMinute != null)
-            minuteDue = dueMinute.isInteger() ? dueMinute.toInteger() : event.dueMinute
-        if(dueHour != null)
-            hourDue = dueHour.isInteger() ? dueHour.toInteger() : event.dueHour
+        boolean isPublic
 
         if(event != null) {
+            if(privacyString != null) {
+                if (privacyString.equalsIgnoreCase("true")) {
+                    isPublic = true
+                } else {
+                    isPublic = false
+                }
+            }
+            if(startingMonth != null)
+                startMonth = startingMonth.isInteger() ? startingMonth.toInteger() : event.startingMonth
+            if(startingDay != null)
+                startDay = startingDay.isInteger() ? startingMonth.toInteger() : event.startingDay
+            if(startingYear != null)
+                startYear = startingYear.isInteger() ? startingYear.toInteger() : event.startingYear
+            if(dueMonth != null)
+                monthDue = dueMonth.isInteger() ? dueMonth.toInteger() : event.dueMonth
+            if(dueDay != null)
+                dayDue = dueDay.isInteger() ? dueDay.toInteger() : event.dueDay
+            if(dueYear != null)
+                yearDue = dueYear.isInteger() ? dueYear.toInteger() : event.dueYear
+            if(dueMinute != null)
+                minuteDue = dueMinute.isInteger() ? dueMinute.toInteger() : event.dueMinute
+            if(dueHour != null)
+                hourDue = dueHour.isInteger() ? dueHour.toInteger() : event.dueHour
+
             if (requestingUser != null) {
                 if((event.user.id == requestingUser.id) ||((event.organization.id != null) && (doesUserHaveReadWriteAccess(event.organization, requestingUser)))) {
 
@@ -214,6 +222,10 @@ class EventService {
                         if (!event.color.equals(color))
                             event.color = color
                     }
+                    if(isPublic != null) {
+                        if (event.isPublic != isPublic)
+                            event.isPublic = isPublic
+                    }
 
                     event.save(flush:true, failOnError: true)
                     res.data = event
@@ -225,7 +237,7 @@ class EventService {
             }
 
         } else {
-            res = createEvent(token, orgId, name, description, startingMonth, startingDay, startingYear, dueMonth, dueDay, dueYear, dueMinute, dueHour, color)
+            res = createEvent(token, orgId, name, description, startingMonth, startingDay, startingYear, dueMonth, dueDay, dueYear, dueMinute, dueHour, color, privacyString)
         }
         res
     }
