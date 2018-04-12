@@ -1,6 +1,7 @@
 package organizer
 
 import grails.gorm.transactions.Transactional
+import org.springframework.http.HttpStatus
 import util.QueryResult
 
 @Transactional
@@ -22,40 +23,55 @@ class EventService {
      * @param dueHour (Optional) A string representing the hour when the event is due
      * @param color (Optional) A string representing the color the event will be displayed in on the User's Calendar
      * @param res A QueryResult stores data from the method
+     * @param privacyString A boolean representing whether the event will be private or public
      * @return A QueryResult The result of the method
      */
-    QueryResult<Event> createEvent(AuthToken token, String orgId, String name, String description, String startingMonth, String startingDay, String startingYear, String dueMonth, String dueDay, String dueYear, String dueMinute, String dueHour, String color, QueryResult<Event> res = new QueryResult<>(success: true)) {
+    QueryResult<Event> createEvent(AuthToken token, String orgId, String name, String description, String startingMonth, String startingDay, String startingYear, String dueMonth, String dueDay, String dueYear, String dueMinute, String dueHour, String color, String privacyString) {
+        QueryResult<Event> res = new QueryResult<>(success: true)
         int monthDue = dueMonth.isInteger() ? dueMonth.toInteger() : -1
         int dayDue = dueDay.isInteger() ? dueDay.toInteger() : -1
         int yearDue = dueYear.isInteger() ? dueYear.toInteger() : -1
+        boolean isPrivate
+
+        if(privacyString.equalsIgnoreCase("true"))
+            isPrivate = true
+        else
+            isPrivate = false
+
         Organization organization
 
         User user = token?.user
-        Event event = new Event(name: name, dueMonth: monthDue, dueDay: dayDue, dueYear: yearDue)
+        if(user != null) {
+            Event event = new Event(name: name, dueMonth: monthDue, dueDay: dayDue, dueYear: yearDue, isPrivate: isPrivate)
 
 
-        if(description != null)
-            event.description = description
-        if(startingMonth!=null)
-            event.startingMonth = startingMonth.isInteger() ? startingMonth.toInteger() : -1
-        if(startingYear != null)
-            event.startingYear = startingYear.isInteger() ? startingYear.toInteger() : -1
-        if(startingDay != null)
-            event.startingDay = startingDay.isInteger() ? startingDay.toInteger() : -1
-        if(dueHour != null)
-            event.dueHour = dueHour.isInteger() ? dueHour.toInteger() : -1
-        if(dueMinute != null)
-            event.dueMinute = dueMinute.isInteger() ? dueMinute.toInteger() : -1
-        if(color != null)
-            event.color = color
+            if (description != null)
+                event.description = description
+            if (startingMonth != null)
+                event.startingMonth = startingMonth.isInteger() ? startingMonth.toInteger() : -1
+            if (startingYear != null)
+                event.startingYear = startingYear.isInteger() ? startingYear.toInteger() : -1
+            if (startingDay != null)
+                event.startingDay = startingDay.isInteger() ? startingDay.toInteger() : -1
+            if (dueHour != null)
+                event.dueHour = dueHour.isInteger() ? dueHour.toInteger() : -1
+            if (dueMinute != null)
+                event.dueMinute = dueMinute.isInteger() ? dueMinute.toInteger() : -1
+            if (color != null)
+                event.color = color
 
-        if(orgId != null) {
-            Long organizationId = orgId.isLong() ? orgId.toLong() : -1
-            organization = Organization.findById(organizationId)
-            if(canUserCreateOrgEvent(organization, user))
-                res = createOrganizationEvent(organization, event, res)
+            if (orgId != null) {
+                Long organizationId = orgId.isLong() ? orgId.toLong() : -1
+                organization = Organization.findById(organizationId)
+                if (doesUserHaveReadWriteAccess(organization, user))
+                    res = createOrganizationEvent(organization, event, res)
+                else
+                    QueryResult.fromHttpStatus(HttpStatus.UNAUTHORIZED, res)
+            } else {
+                res = createUserEvent(user, event, res)
+            }
         } else {
-            res = createUserEvent(user, event, res)
+            QueryResult.fromHttpStatus(HttpStatus.UNAUTHORIZED, res)
         }
         res
     }
@@ -95,44 +111,89 @@ class EventService {
      * @param result A QueryResult that can store data
      * @return The event
      */
-    QueryResult<Event> getEvent(AuthToken token, String eventId, QueryResult<Event> result = new QueryResult<>(success: true)) {
+    QueryResult<Event> getEvent(AuthToken token, String eventId) {
+        QueryResult<Event> result = new QueryResult<>(success: true)
         User requestingUser = token?.user
         Long eID = eventId.isLong() ? eventId.toLong() : -1
 
-        if(requestingUser != null && eID != -1) {
-            Event event = Event.findById(eID)
-            if(event.user != null) {
-                if(event.user.id == requestingUser.id)
-                    result.data = event
-            } else if(event.organization != null) {
-                if(isInOrganization(event.organization, requestingUser))
-                    result.data = event
+        if(requestingUser != null) {
+            if(eID != -1) {
+                Event event = Event.findById(eID)
+                if (event.user != null) {
+                    if (event.user.id == requestingUser.id)
+                        result.data = event
+                } else if (event.organization != null) {
+                    if (isInOrganization(event.organization, requestingUser))
+                        result.data = event
+                } else {
+                    QueryResult.fromHttpStatus(HttpStatus.BAD_REQUEST,result)
+                }
+            } else {
+                QueryResult.fromHttpStatus(HttpStatus.BAD_REQUEST, result)
             }
+        } else {
+            QueryResult.fromHttpStatus(HttpStatus.UNAUTHORIZED, result)
         }
         result
     }
 
-    QueryResult<Event> editEvent(String eventID, AuthToken token, String orgId, String name, String description, String startingMonth, String startingDay, String startingYear, String dueMonth, String dueDay, String dueYear, String dueMinute, String dueHour, String color, QueryResult<Event> res = new QueryResult<>(success: true)) {
+    /**
+     *
+     * @param eventID
+     * @param token
+     * @param orgId
+     * @param name
+     * @param description
+     * @param startingMonth
+     * @param startingDay
+     * @param startingYear
+     * @param dueMonth
+     * @param dueDay
+     * @param dueYear
+     * @param dueMinute
+     * @param dueHour
+     * @param color
+     * @param res
+     * @return
+     */
+    QueryResult<Event> editEvent(String eventID, AuthToken token, String orgId, String name, String description, String startingMonth, String startingDay, String startingYear, String dueMonth, String dueDay, String dueYear, String dueMinute, String dueHour, String color) {
+        QueryResult<Event> res = new QueryResult<>(success: true)
         User requestingUser = token?.user
         Long eID = eventID.isLong() ? eventID.toLong() : -1
         Event event = Event.findById(eID)
+        int startMonth = event.startingMonth, startDay = event.startingDay, startYear = event.startingYear, monthDue = event.dueMonth
+        int dayDue = event.dueDay, yearDue = event.dueYear, minuteDue = event.dueMinute, hourDue = event.dueHour
 
-        int startMonth = startingMonth.isInteger() ? startingMonth.toInteger() : event.startingMonth
-        int startDay = startingDay.isInteger() ? startingMonth.toInteger() : event.startingDay
-        int startYear = startingYear.isInteger() ? startingYear.toInteger() : event.startingYear
-        int monthDue = dueMonth.isInteger() ? dueMonth.toInteger() : event.dueMonth
-        int dayDue = dueDay.isInteger() ? dueDay.toInteger() : event.dueDay
-        int yearDue = dueYear.isInteger() ? dueYear.toInteger() : event.dueYear
-        int minuteDue = dueMinute.toInteger() ? dueMinute.toInteger() : event.dueMinute
-        int hourDue = dueHour.isInteger() ? dueHour.toInteger() : event.dueHour
+        if(startingMonth != null)
+            startMonth = startingMonth.isInteger() ? startingMonth.toInteger() : event.startingMonth
+        if(startingDay != null)
+            startDay = startingDay.isInteger() ? startingMonth.toInteger() : event.startingDay
+        if(startingYear != null)
+            startYear = startingYear.isInteger() ? startingYear.toInteger() : event.startingYear
+        if(dueMonth != null)
+            monthDue = dueMonth.isInteger() ? dueMonth.toInteger() : event.dueMonth
+        if(dueDay != null)
+            dayDue = dueDay.isInteger() ? dueDay.toInteger() : event.dueDay
+        if(dueYear != null)
+            yearDue = dueYear.isInteger() ? dueYear.toInteger() : event.dueYear
+        if(dueMinute != null)
+            minuteDue = dueMinute.isInteger() ? dueMinute.toInteger() : event.dueMinute
+        if(dueHour != null)
+            hourDue = dueHour.isInteger() ? dueHour.toInteger() : event.dueHour
 
         if(event != null) {
             if (requestingUser != null) {
-                if((event.user.id == requestingUser.id) ||((event.organization.id != null) && (canUserCreateOrgEvent(event.organization, requestingUser)))) {
-                    if (!event.name.equals(name))
-                        event.name = name
-                    if (!event.description.equals(description))
-                        event.description = description
+                if((event.user.id == requestingUser.id) ||((event.organization.id != null) && (doesUserHaveReadWriteAccess(event.organization, requestingUser)))) {
+
+                    //make updates based on the entered information
+                    if(name != null) {
+                        if (!event.name.equals(name))
+                            event.name = name
+                    }
+                    if(description != null) {
+                        if (!event.description.equals(description))
+                            event.description = description
+                    }
                     if (event.startingMonth != startMonth)
                         event.startingMonth = startMonth
                     if (event.startingDay != startingDay)
@@ -149,16 +210,54 @@ class EventService {
                         event.dueMinute = minuteDue
                     if (event.dueHour != hourDue)
                         event.dueHour = hourDue
-                    if (!event.color.equals(color))
-                        event.color = color
-                }
-            }
-        } else {
-            res = createEvent(token, orgId, name, description, startingMonth, startingDay, startingYear, dueMonth, dueDay, dueYear, dueMinute, dueHour, color, res)
-        }
+                    if(color != null) {
+                        if (!event.color.equals(color))
+                            event.color = color
+                    }
 
-        res.data = event
+                    event.save(flush:true, failOnError: true)
+                    res.data = event
+                } else {
+                    QueryResult.fromHttpStatus(HttpStatus.UNAUTHORIZED, res)
+                }
+            } else {
+                QueryResult.fromHttpStatus(HttpStatus.UNAUTHORIZED, res)
+            }
+
+        } else {
+            res = createEvent(token, orgId, name, description, startingMonth, startingDay, startingYear, dueMonth, dueDay, dueYear, dueMinute, dueHour, color)
+        }
         res
+    }
+
+    QueryResult<Event> deleteEvent(AuthToken token, String eventId) {
+        User requestingUser = token?.user
+        QueryResult<Event> result = new QueryResult<>(success: true)
+        Long eID = eventId.isLong() ? eventId.toLong() : -1
+        Event event = Event.findById(eID)
+        if(requestingUser != null) {
+            if (event != null) {
+                if (event.user != null) { //user owned event
+                    if (event.user.id == requestingUser.id) {
+                        event.delete(flush: true, failOnError: true)
+                    } else {
+                        QueryResult.fromHttpStatus(HttpStatus.UNAUTHORIZED, result)
+                    }
+                } else if(event.organization != null) { //organization owned event
+                    if(doesUserHaveReadWriteAccess(event.organization, requestingUser)) {
+                        event.delete(flush: true, failOnError: true)
+                    } else {
+                        QueryResult.fromHttpStatus(HttpStatus.UNAUTHORIZED, result)
+                    }
+                }
+            } else {
+                QueryResult.fromHttpStatus(HttpStatus.BAD_REQUEST, result)
+            }
+        }
+        else {
+            QueryResult.fromHttpStatus(HttpStatus.UNAUTHORIZED, result)
+        }
+        result
     }
 
     /**
@@ -187,7 +286,7 @@ class EventService {
      * @param user The requesting user
      * @return true if the user has read/write access, false if the user does not have read write access
      */
-    boolean canUserCreateOrgEvent(Organization organization, User user) {
+    boolean doesUserHaveReadWriteAccess(Organization organization, User user) {
         for (User admin : organization.admins) {
             if(admin.id == user.id)
                 true

@@ -10,9 +10,10 @@ class Event {
     int dueMonth
     int dueDay
     int dueYear
-    String dueHour
-    String dueMinute
+    int dueHour
+    int dueMinute
     String color
+    boolean isPrivate
 
     static belongsTo = [user: User, organization: Organization]
 
@@ -31,6 +32,7 @@ class Event {
         color nullable: true
         user nullable: true
         organization nullable: true
+        isPrivate nullable: false
     }
 
 }

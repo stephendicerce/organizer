@@ -78,8 +78,14 @@ class OrganizationService {
      * @return
      */
     private QueryResult<Organization> doDelete(Organization organization, QueryResult<Organization> result = new QueryResult<>(success: true)) {
-
+        def events = Event.findByOrganization(organization)
+        for(event in events) {
+            event.delete(flush: true, failOnError: true)
+        }
+        organization.delete(flush: true, failOnError: true)
     }
+
+
 
     private boolean isOwnerOf(User user, Organization organization) {
         long userId = user.id

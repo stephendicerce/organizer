@@ -19,6 +19,13 @@ class UrlMappings {
             "/"(controller: 'organization', action: 'deleteOrganization', method: 'delete')
         }
 
+        group "/api/event", {
+            "/"(controller: 'event', action: 'getEvent', method: 'get')
+            "/"(controller: 'event', action: 'postEvent', method: 'post')
+            "/"(controller: 'event', action: 'putEvent', method: 'put')
+            "/"(controller: 'event', action: 'deleteEvent', method: 'delete')
+        }
+
 
 
 

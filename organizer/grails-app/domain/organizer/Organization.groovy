@@ -12,6 +12,7 @@ class Organization {
 
     static constraints = {
         description nullable: true
+        name nullable: false
         calendar nullable: false
     }
 }
