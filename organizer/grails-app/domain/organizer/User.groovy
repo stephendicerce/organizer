@@ -10,7 +10,7 @@ class User {
 
     static hasOne = [authToken: AuthToken]
 
-    static hasMany = [friends: User]
+    static hasMany = [friends: User, requestedFriends: User]
 
     static mapping = {
        /* table "users"
@@ -22,5 +22,6 @@ class User {
         email unique: true
         authToken nullable: true
         imageUrl nullable: true, blank: false
+
     }
 }

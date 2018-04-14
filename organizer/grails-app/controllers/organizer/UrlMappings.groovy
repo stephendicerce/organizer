@@ -20,9 +20,24 @@ class UrlMappings {
         }
 
         group "/api/event", {
+            //basic user functions
             "/user"(controller: 'event', action: 'getUserEvent', method: 'get')
             "/user"(controller: 'event', action: 'postUserEvent', method: 'post')
-            "/"(controller: 'event', action: 'putUserEvent', method: 'put')
+            "/user"(controller: 'event', action: 'putUserEvent', method: 'put')
+
+            //more for user
+            "/user/month"(controller: 'event', action: 'getUserEventsForMonth', method: 'get')
+            "/user/allevents"(controller: 'event', action: '', method: 'get')
+
+            //basic organization functions
+            "/org"(controller: 'event', action: 'getOrgEvent', method: 'get')
+            "/org"(controller: 'event', action: 'postOrgEvent', method: 'post')
+            "/org"(controller: 'event', action: 'putOrgEvent', method: 'put')
+
+            //more for organization
+            "/org/month"(controller: 'event', action: 'getOrgEventsForMonth', method: 'get')
+
+            //delete function
             "/"(controller: 'event', action: 'deleteEvent', method: 'delete')
         }
 

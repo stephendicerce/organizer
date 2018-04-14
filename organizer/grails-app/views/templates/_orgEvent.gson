@@ -1,6 +1,6 @@
 import organizer.Event
 
-model{
+model {
     Event event
 }
 
@@ -17,6 +17,6 @@ json {
     dueHour event.dueHour
     dueMinute event.dueMinute
     color event.color
-    ownerId event.user.id
+    orgId event.organization.id
     isPrivate event.isPublic
 }
