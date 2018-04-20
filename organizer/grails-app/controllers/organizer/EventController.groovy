@@ -27,12 +27,12 @@ class EventController {
         }
     }
 
-    def putUserEvent(String accessToken, String orgId, String name, String description, String startingMonth, String startingDay, String startingYear, String dueMonth, String dueDay, String dueYear, String dueMinute, String dueHour, String color, String privacyString) {
+    def putUserEvent(String accessToken, String name, String description, String startingMonth, String startingDay, String startingYear, String dueMonth, String dueDay, String dueYear, String dueMinute, String dueHour, String color, String privacyString) {
         def require = preconditionService.notNull(params, ["accessToken", "name", "dueMonth", "dueDay", "dueYear", "privacyString"])
         def token = preconditionService.accessToken(accessToken, require).data
 
         if(require.success) {
-            def result = eventService.createEvent(token, orgId, name, description, startingMonth, startingDay, startingYear, dueMonth, dueDay, dueYear, dueMinute, dueHour, color, privacyString)
+            def result = eventService.createEvent(token, null, name, description, startingMonth, startingDay, startingYear, dueMonth, dueDay, dueYear, dueMinute, dueHour, color, privacyString)
 
             if(result.success) {
                 render(view: 'userEvent', model: [token: token, event: result.data])
@@ -44,15 +44,49 @@ class EventController {
         }
     }
 
-    def postUserEvent(String eventId, String accessToken, String orgId, String name, String description, String startingMonth, String startingDay, String startingYear, String dueMonth, String dueDay, String dueYear, String dueMinute, String dueHour, String color, String privacyString) {
-        def require = preconditionService.notNull(params, ["accessToken"])
+    def putOrgEvent(String accessToken, String orgId, String name, String description, String startingMonth, String startingDay, String startingYear, String dueMonth, String dueDay, String dueYear, String dueMinute, String dueHour, String color) {
+        def require = preconditionService.notNull(params, ["accessToken", "orgId", "name", "dueMonth", "dueDay", "dueYear"])
         def token = preconditionService.accessToken(accessToken, require).data
 
         if(require.success) {
-            def result = eventService.editEvent(eventId, token, orgId, name, description, startingMonth, startingDay, startingYear, dueMonth, dueDay, dueYear, dueMinute, dueHour, color, privacyString)
+            def result = eventService.createEvent(token, orgId, name, description, startingMonth, startingDay, startingYear, dueMonth, dueDay, dueYear, dueMinute, dueHour, color, "true")
+
+            if(result.success) {
+                render(view: 'orgEvent', model: [token: token, event: result.data])
+            } else {
+                render(view: '../failure', model: [errorCode: result.errorCode, message: result.message])
+            }
+        } else {
+            render(view: '../failure', model: [errorCode: require.errorCode, message: require.message])
+        }
+    }
+
+    def postUserEvent(String eventId, String accessToken, String name, String description, String startingMonth, String startingDay, String startingYear, String dueMonth, String dueDay, String dueYear, String dueMinute, String dueHour, String color, String privacyString) {
+        def require = preconditionService.notNull(params, ["accessToken", "eventId"])
+        def token = preconditionService.accessToken(accessToken, require).data
+
+        if(require.success) {
+            def result = eventService.editEvent(eventId, token, null, name, description, startingMonth, startingDay, startingYear, dueMonth, dueDay, dueYear, dueMinute, dueHour, color, privacyString)
 
             if(result.success) {
                 render(view: 'userEvent', model: [token: token, event: result.data])
+            } else {
+                render(view: '../failure', model: [errorCode: result.errorCode, message: result.message])
+            }
+        } else {
+            render(view: '../failure', model: [errorCode: require.errorCode, message: require.message])
+        }
+    }
+
+    def postOrgEvent(String eventId, String accessToken, String orgId, String name, String description, String startingMonth, String startingDay, String startingYear, String dueMonth, String dueDay, String dueYear, String dueMinute, String dueHour, String color) {
+        def require = preconditionService.notNull(params, ["accessToken", "orgId", "eventId"])
+        def token = preconditionService.accessToken(accessToken, require).data
+
+        if(require.success) {
+            def result = eventService.editEvent(eventId, token, orgId, name, description, startingMonth, startingDay, startingYear, dueMonth, dueDay, dueYear, dueMinute, dueHour, color, "true")
+
+            if(result.success) {
+                render(view: 'orgEvent', model: [token: token, event: result.data])
             } else {
                 render(view: '../failure', model: [errorCode: result.errorCode, message: result.message])
             }
@@ -103,7 +137,7 @@ class EventController {
             def result = eventService.getAllOrganizationEventsByMonth(token, orgId, monthString)
 
             if(result.success) {
-                render(view: "orgEventList", model: [token: token, events: result.data])
+                render(view: "orgEventsList", model: [token: token, events: result.data])
             } else {
                 render(view: '../failure', model: [errorCode: result.errorCode, message: result.message])
             }
@@ -120,10 +154,27 @@ class EventController {
             def result = eventService.getAllEventsForRequestingUser(token, null)
 
             if(result.success) {
+                render(view: "userEventsList", model: [token: token, events: result.data])
+            } else {
+                render(view: '../failure', model: [errorCode: result.errorCode, message: result.message])
+            }
+        }
+    }
+
+    def getAllUserFriendEvents(String accessToken, String friendId) {
+        def require = preconditionService.notNull(params, ["accessToken", "friendId"])
+        def token = preconditionService.accessToken(accessToken, require).data
+
+        if(require.success) {
+            def result = eventService.getAllEventsForRequestingUser(token, friendId)
+
+            if(result.success) {
                 render(view: "userEventList", model: [token: token, events: result.data])
             } else {
                 render(view: '../failure', model: [errorCode: result.errorCode, message: result.message])
             }
+        } else {
+            render(view: '../failure', model: [errorCode: require.errorCode, message: require.message])
         }
     }
 }

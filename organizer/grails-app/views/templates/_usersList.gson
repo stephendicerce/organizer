@@ -1,0 +1,7 @@
+import organizer.User
+
+model{
+    Collection<Collection<User>> orgUsers = []
+}
+
+json tmpl.'templates/users'(orgUsers)

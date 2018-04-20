@@ -7,6 +7,8 @@ class UrlMappings {
         // Page url mapping
         "/"(controller: 'application', action: 'landing')
         "/dashboard"(controller: 'application', action: "dashboard")
+        "/createEvent"(controller: 'application', action: "createEvent")
+        "/createOrganization"(controller: 'application', action: "createOrganization")
 
 
         "/user/auth"(controller: 'auth', action: 'auth', method: 'post')
@@ -14,9 +16,13 @@ class UrlMappings {
         "/user/logout"(controller: 'auth', action: 'logout', method: 'post')
 
         group "/api/organization", {
-            "/"(controller: 'organization', action: 'postOrganization', method: 'post')
+            "/"(controller: 'organization', action: 'putOrganization', method: 'put')
             "/"(controller: 'organization', action: 'organizationGet', method: 'get')
             "/"(controller: 'organization', action: 'deleteOrganization', method: 'delete')
+
+            "/users"(controller: 'organization', action: 'getOrganizationUsers', method: 'get')
+            "/user/add"(controller: 'organization', action: 'postUser', method: 'post')
+            "/user/update"(controller: 'organization', action: 'updateUser', method: 'post')
         }
 
         group "/api/event", {
@@ -27,7 +33,8 @@ class UrlMappings {
 
             //more for user
             "/user/month"(controller: 'event', action: 'getUserEventsForMonth', method: 'get')
-            "/user/allevents"(controller: 'event', action: '', method: 'get')
+            "/user/all"(controller: 'event', action: 'getAllUserEvents', method: 'get')
+            "/user/friend"(controller: 'event', action: 'getAllUserFriendEvents', method: 'get')
 
             //basic organization functions
             "/org"(controller: 'event', action: 'getOrgEvent', method: 'get')

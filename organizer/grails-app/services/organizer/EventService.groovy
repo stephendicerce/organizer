@@ -34,6 +34,7 @@ class EventService {
         int yearDue = dueYear.isInteger() ? dueYear.toInteger() : -1
         boolean isPublic = false
 
+
         if(privacyString != null) {
             if (privacyString.equalsIgnoreCase("true"))
                 isPublic = true
@@ -64,7 +65,7 @@ class EventService {
             if (orgId != null) {
                 Long organizationId = orgId.isLong() ? orgId.toLong() : -1
                 organization = Organization.findById(organizationId)
-                if (doesUserHaveReadWriteAccess(organization, user))
+                if (user.id == organization.orgOwner.id)
                     res = createOrganizationEvent(organization, event, res)
                 else
                     QueryResult.fromHttpStatus(HttpStatus.UNAUTHORIZED, res)
@@ -189,7 +190,7 @@ class EventService {
                 hourDue = dueHour.isInteger() ? dueHour.toInteger() : event.dueHour
 
             if (requestingUser != null) {
-                if((event.user.id == requestingUser.id) ||((event.organization.id != null) && (doesUserHaveReadWriteAccess(event.organization, requestingUser)))) {
+                if(((event.organization != null) && (requestingUser.id == event.organization.orgOwner.id))) {
 
                     //make updates based on the entered information
                     if(name != null) {
@@ -281,10 +282,13 @@ class EventService {
             if(user.id == requestingUser.id)
                 return true
         }
+
+        /*
         for(User admin: organization.admins) {
             if(admin.id == requestingUser.id)
                 return true
         }
+        */
         if(organization.orgOwner.id == requestingUser.id)
             return true
         return false
@@ -297,15 +301,23 @@ class EventService {
      * @return true if the user has read/write access, false if the user does not have read write access
      */
     boolean doesUserHaveReadWriteAccess(Organization organization, User user) {
+        /*
         for (User admin : organization.admins) {
             if(admin.id == user.id)
                 true
         }
+        */
         if(organization.orgOwner.id == user.id)
             true
         false
     }
 
+    /**
+     *
+     * @param token
+     * @param monthString
+     * @return
+     */
     QueryResult<List<Event>> getAllUserEventsByMonth(AuthToken token, String monthString) {
         QueryResult<List<Event>> result = new QueryResult<>(success: true)
         User requestingUser = token?.user
@@ -337,6 +349,13 @@ class EventService {
         }
     }
 
+    /**
+     *
+     * @param token
+     * @param orgId
+     * @param monthString
+     * @return
+     */
     QueryResult<List<Event>> getAllOrganizationEventsByMonth(AuthToken token, String orgId, String monthString) {
         QueryResult<List<Event>> result = new QueryResult<>(success: true)
         User requestingUser = token?.user
@@ -374,6 +393,12 @@ class EventService {
         }
     }
 
+    /**
+     *
+     * @param token
+     * @param userIdString
+     * @return
+     */
     QueryResult<List<Event>> getAllEventsForRequestingUser(AuthToken token, String userIdString) {
         QueryResult<List<Event>> result = new QueryResult<>(success: true)
         User user = token?.user
@@ -406,12 +431,20 @@ class EventService {
         result
     }
 
+    /**
+     *
+     * @param token
+     * @param user
+     * @param result
+     * @return
+     */
     QueryResult<List<Event>> getAllEventsForUser(AuthToken token, User user, QueryResult<List<Event>> result) {
         User requestingUser = token?.user
         result = new QueryResult<>(success: true)
 
         if(requestingUser != null) {
             if(requestingUser.id == user.id) {
+                println "User requesting their own event"
                 result.data = Event.findAllByUser(user)
             } else {
                 List<Event> userEvents = Event.findAllByUser(user)

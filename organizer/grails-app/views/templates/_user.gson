@@ -11,5 +11,4 @@ json {
     name user.firstName != null ? String.format("%s %s", user.firstName, user.lastName) : null
     email user.email
     imageUrl  user.imageUrl
-    type user.role.type.name()
 }

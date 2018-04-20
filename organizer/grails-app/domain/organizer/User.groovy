@@ -22,6 +22,5 @@ class User {
         email unique: true
         authToken nullable: true
         imageUrl nullable: true, blank: false
-
     }
 }

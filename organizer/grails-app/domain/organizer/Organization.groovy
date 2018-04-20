@@ -7,7 +7,7 @@ class Organization {
     Calendar calendar
 
 
-    static hasMany = [users: User, admins:User]
+    static hasMany = [users: User]
     static belongsTo = [orgOwner: User]
 
     static constraints = {

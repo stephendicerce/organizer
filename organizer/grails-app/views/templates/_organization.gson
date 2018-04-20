@@ -8,5 +8,5 @@ json {
     id organization.id
     name organization.name
     description organization.description
-    members ((organization.users != null) ? organization.users.size() : 0)
+    members ((organization.users != null) ? (organization.users.size() + 1): 1)
 }

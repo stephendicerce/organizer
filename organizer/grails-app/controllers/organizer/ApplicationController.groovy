@@ -2,6 +2,8 @@ package organizer
 
 import util.QueryResult
 
+import javax.management.Query
+
 class ApplicationController {
     PreconditionService preconditionService
 
@@ -19,6 +21,30 @@ class ApplicationController {
             println "User isn't logged in"
             session.invalidate()
             render(view: 'landing')
+        }
+    }
+
+    def createEvent() {
+        QueryResult<AuthToken> access = hasAccess()
+        if(access.success) {
+            User user = access.data.user
+            render(view: 'createEvent')
+        } else {
+            println "User isn't logged in"
+            session.invalidate()
+            render(view: 'landing')
+        }
+    }
+
+    def createOrganization() {
+        QueryResult<AuthToken> access = hasAccess()
+        if(access.success) {
+            User user = access.data.user
+            render(view: "createOrganization")
+        } else {
+            println "User isn't logged in"
+            session.invalidate()
+            render(view: "landing")
         }
     }
 

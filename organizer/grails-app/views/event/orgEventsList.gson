@@ -11,6 +11,6 @@ json {
     status "success"
     data {
         token token.accessToken
-        events g.render(template: "/templates/orgEvents", model: [orgEvents: events])
+        events g.render(template: "/templates/orgEvents", model: [events: events])
     }
 }
