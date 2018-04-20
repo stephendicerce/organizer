@@ -11,18 +11,45 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <asset:javascript src="auth/config.js"/>
     <asset:javascript src="auth/logout.js"/>
+    <asset:javascript src="eventCreation.js"/>
     <asset:stylesheet src="calendarView.css"/>
+    <asset:stylesheet src="eventCreation.css"/>
+
 </head>
 <body>
 <div class="intro-header">
     <div class="container">
-        <div id="headerGrad" class="intro-header">
+        <div id="headerGrad">
             <div id="title">
                 Create an Event
             </div>
             <button type="button" onclick="document.location.href='../dashboard'">
                 <span class="sr-only">Toggle navigation</span> Dashboard <i class="fa fa-bars"></i>
             </button>
+        </div>
+
+        <div id="userOrgToggle">
+            <br>
+            <br>
+            Please fill out the following Form to create an event.
+
+            <br><br>
+            <button onclick="toggleOrgDropdown()" id="organizationEventButton">
+                <span class="sr-only">Toggle navigation</span> Create an Organization Event<i class="fa fa-bars"></i>
+            </button>
+
+            <br><br>
+            <div id="orgDropdown">
+                <div class="dropdown">
+                    Choose the organization you wish to create an event for from the drop down menu.<br>
+                    <button onclick="organizationDropdown()" class="dropbtn">My Organizations</button>
+                    <div id="myDropdown" class="dropdown-content">
+                        <a href="#home">Home</a>
+                        <a href="#about">About</a>
+                        <a href="#contact">Contact</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
