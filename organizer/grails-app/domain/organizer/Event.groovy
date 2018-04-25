@@ -13,7 +13,7 @@ class Event {
     int dueHour
     int dueMinute
     String color
-    boolean isPublic
+    int isPublic
 
     static belongsTo = [user: User, organization: Organization]
 
@@ -32,7 +32,6 @@ class Event {
         color nullable: true
         user nullable: true
         organization nullable: true
-        isPublic nullable: false
     }
 
 }

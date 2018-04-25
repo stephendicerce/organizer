@@ -9,11 +9,18 @@ class UrlMappings {
         "/dashboard"(controller: 'application', action: "dashboard")
         "/createEvent"(controller: 'application', action: "createEvent")
         "/createOrganization"(controller: 'application', action: "createOrganization")
+        "/myEvents"(controller: 'application', action: "eventList")
+        "/myOrganizations"(controller: 'application', action: "orgList")
+        "/findFriends"(controller: 'application', action: "findFriends")
+        "/following"(controller: 'application', action: "following")
+        "/help"(controller: 'application',action: 'help')
 
 
         "/user/auth"(controller: 'auth', action: 'auth', method: 'post')
         "/user/auth"(controller: 'auth', action: 'current', method: 'get')
         "/user/logout"(controller: 'auth', action: 'logout', method: 'post')
+
+        "/api/user"(controller: 'user', action: 'getUser', method: 'get')
 
         group "/api/organization", {
             "/"(controller: 'organization', action: 'putOrganization', method: 'put')
@@ -21,6 +28,7 @@ class UrlMappings {
             "/"(controller: 'organization', action: 'deleteOrganization', method: 'delete')
 
             "/users"(controller: 'organization', action: 'getOrganizationUsers', method: 'get')
+            "/user/all"(controller: 'organization', action: 'getAllOrganizations', method: 'get')
             "/user/add"(controller: 'organization', action: 'postUser', method: 'post')
             "/user/update"(controller: 'organization', action: 'updateUser', method: 'post')
         }
@@ -48,6 +56,11 @@ class UrlMappings {
             "/"(controller: 'event', action: 'deleteEvent', method: 'delete')
         }
 
+        group "/api/user", {
+            "/"(controller: 'user', action: 'getUser', method: 'delete')
+            "/follow"(controller: 'user', action: 'addUserToFollowList', method: 'post')
+            "/unfollow"(controller: 'user', action: 'removeUserFromFollowList', method: 'post')
+        }
 
 
 

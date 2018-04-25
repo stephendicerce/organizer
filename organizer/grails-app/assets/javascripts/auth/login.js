@@ -10,6 +10,7 @@ $(document).ready(function () {
         console.log(data);
         if (data.status) {
             document.location.href = "/dashboard";
+            console.log(data)
         } else {
             signOut();
         }

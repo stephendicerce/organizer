@@ -5,8 +5,8 @@ model {
 }
 
 json {
-    id organization.id
-    name organization.name
-    description organization.description
+    orgId organization.id
+    orgName organization.name
+    orgDescription organization.description
     members ((organization.users != null) ? (organization.users.size() + 1): 1)
 }

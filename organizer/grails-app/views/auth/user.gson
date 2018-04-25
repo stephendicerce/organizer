@@ -8,6 +8,6 @@ json {
     status "success"
     data {
         token user.authToken.accessToken
-        user g.render(template: "templates/user", model:[user:user])
+        user g.render(template: "/templates/user", model:[user:user])
     }
 }

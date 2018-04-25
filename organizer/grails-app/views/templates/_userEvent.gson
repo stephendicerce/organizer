@@ -5,9 +5,9 @@ model{
 }
 
 json {
-    id event.id
-    name event.name
-    description event.description
+    eventId event.id
+    eventName event.name
+    eventDescription event.description
     startingMonth event.startingMonth
     startingDay event.startingDay
     startingYear event.startingYear
@@ -16,7 +16,7 @@ json {
     dueYear event.dueYear
     dueHour event.dueHour
     dueMinute event.dueMinute
-    color event.color
+    eventColor event.color
     ownerId event.user.id
-    isPrivate event.isPublic
+    isPublic event.isPublic
 }

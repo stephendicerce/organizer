@@ -12,11 +12,14 @@ class EventController {
     def getUserEvent(String accessToken, String eventId) {
         def require = preconditionService.notNull(params, ["accessToken"])
         def token = preconditionService.accessToken(accessToken, require).data
-
+        println "got require"
         if(require.success) {
+            println "getting result"
             def result = eventService.getUserEvent(token, eventId)
-
+            println "got result"
             if(result.success) {
+                println "event id :" + result.data.id
+
                 render(view: 'userEvent', model: [token: token, event: result.data])
             } else {
                 render(view: '../failure', model: [errorCode: result.errorCode, message: result.message])
@@ -64,11 +67,13 @@ class EventController {
     def postUserEvent(String eventId, String accessToken, String name, String description, String startingMonth, String startingDay, String startingYear, String dueMonth, String dueDay, String dueYear, String dueMinute, String dueHour, String color, String privacyString) {
         def require = preconditionService.notNull(params, ["accessToken", "eventId"])
         def token = preconditionService.accessToken(accessToken, require).data
-
+        println "got require"
         if(require.success) {
+            println "getting result"
             def result = eventService.editEvent(eventId, token, null, name, description, startingMonth, startingDay, startingYear, dueMonth, dueDay, dueYear, dueMinute, dueHour, color, privacyString)
-
+            println "got result"
             if(result.success) {
+                println "Trying to render"
                 render(view: 'userEvent', model: [token: token, event: result.data])
             } else {
                 render(view: '../failure', model: [errorCode: result.errorCode, message: result.message])

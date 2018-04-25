@@ -91,7 +91,7 @@ class OrganizationService {
         if(requestingUser != null) {
             Set<User> userList = new ArrayList<>()
             userList.add(requestingUser)
-            result.data = Organization.findAllByUsers(userList)
+            result.data = Organization.findAllByOrgOwner(requestingUser)
             result
         } else {
             QueryResult.fromHttpStatus(HttpStatus.UNAUTHORIZED, result)

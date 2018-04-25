@@ -1,7 +1,7 @@
 import organizer.Event
 
 model {
-    Collection<Event> events = []
+    Collection<Event> userEvents = []
 }
 
-json tmpl.'/templates/userEvent'(events)
+json tmpl.'/templates/userEvent'(userEvents)

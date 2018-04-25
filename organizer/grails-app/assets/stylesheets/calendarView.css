@@ -1,5 +1,4 @@
 #viewBorder {
-    border-style: solid;
     width: auto;
 }
 
@@ -21,7 +20,7 @@
     float: left;
 }
 
-otherTitleContent {
+.otherTitleContent {
     float: right;
 }
 

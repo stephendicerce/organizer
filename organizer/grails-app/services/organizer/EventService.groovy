@@ -28,25 +28,26 @@ class EventService {
      * @return A QueryResult The result of the method
      */
     QueryResult<Event> createEvent(AuthToken token, String orgId, String name, String description, String startingMonth, String startingDay, String startingYear, String dueMonth, String dueDay, String dueYear, String dueMinute, String dueHour, String color, String privacyString) {
+        println "In create Event"
         QueryResult<Event> res = new QueryResult<>(success: true)
         int monthDue = dueMonth.isInteger() ? dueMonth.toInteger() : -1
         int dayDue = dueDay.isInteger() ? dueDay.toInteger() : -1
         int yearDue = dueYear.isInteger() ? dueYear.toInteger() : -1
-        boolean isPublic = false
+        int isPublic = 1
 
 
         if(privacyString != null) {
             if (privacyString.equalsIgnoreCase("true"))
-                isPublic = true
+                isPublic = 0
         }
 
         Organization organization
 
         User user = token?.user
         if(user != null) {
-            Event event = new Event(name: name, dueMonth: monthDue, dueDay: dayDue, dueYear: yearDue, isPrivate: isPublic)
+            Event event = new Event(name: name, dueMonth: monthDue, dueDay: dayDue, dueYear: yearDue)
 
-
+            event.isPublic = isPublic
             if (description != null)
                 event.description = description
             if (startingMonth != null)
@@ -70,6 +71,7 @@ class EventService {
                 else
                     QueryResult.fromHttpStatus(HttpStatus.UNAUTHORIZED, res)
             } else {
+                println "createUserEvent"
                 res = createUserEvent(user, event, res)
             }
         } else {
@@ -162,15 +164,14 @@ class EventService {
         Event event = Event.findById(eID)
         int startMonth = event.startingMonth, startDay = event.startingDay, startYear = event.startingYear, monthDue = event.dueMonth
         int dayDue = event.dueDay, yearDue = event.dueYear, minuteDue = event.dueMinute, hourDue = event.dueHour
-        boolean isPublic
+        int isPublic
 
         if(event != null) {
             if(privacyString != null) {
-                if (privacyString.equalsIgnoreCase("true")) {
-                    isPublic = true
-                } else {
-                    isPublic = false
-                }
+                if (privacyString.equalsIgnoreCase("true"))
+                    isPublic = 0
+                else
+                    isPublic = 1
             }
             if(startingMonth != null)
                 startMonth = startingMonth.isInteger() ? startingMonth.toInteger() : event.startingMonth
@@ -190,15 +191,15 @@ class EventService {
                 hourDue = dueHour.isInteger() ? dueHour.toInteger() : event.dueHour
 
             if (requestingUser != null) {
-                if(((event.organization != null) && (requestingUser.id == event.organization.orgOwner.id))) {
+                if(((event.organization != null) && (requestingUser.id == event.organization.orgOwner.id)) || ((event.organization==null) && (requestingUser.id == event.user.id))) {
 
                     //make updates based on the entered information
                     if(name != null) {
-                        if (!event.name.equals(name))
+                        if (event.name != name)
                             event.name = name
                     }
                     if(description != null) {
-                        if (!event.description.equals(description))
+                        if (event.description != description)
                             event.description = description
                     }
                     if (event.startingMonth != startMonth)
@@ -218,7 +219,7 @@ class EventService {
                     if (event.dueHour != hourDue)
                         event.dueHour = hourDue
                     if(color != null) {
-                        if (!event.color.equals(color))
+                        if (event.color != color)
                             event.color = color
                     }
                     if(isPublic != null) {

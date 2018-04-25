@@ -11,18 +11,56 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <asset:javascript src="auth/config.js"/>
     <asset:javascript src="auth/logout.js"/>
+    <asset:javascript src="organizationCreation.js"/>
+    <asset:javascript src="menuButton.js"/>
     <asset:stylesheet src="calendarView.css"/>
+    <asset:stylesheet src="eventCreation.css"/>
+    <asset:stylesheet src="menuButton.css"/>
+    <asset:stylesheet src="organizationCreation.css"/>
+
 </head>
 <body>
 <div class="intro-header">
-    <div class="container">
+    <div>
         <div id="headerGrad" class="intro-header">
-            <div id="title">
+            <div class="orgTitle">
                 Create an Organization
             </div>
-            <button type="button" onclick="document.location.href='../dashboard'">
-                <span class="sr-only">Toggle navigation</span> Dashboard <i class="fa fa-bars"></i>
-            </button>
+            <span class="otherTitleContent" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+            <br><br><br><br><br><br><br>
+            <div class="otherTitleContent">
+                <button type="button" onclick="document.location.href='../dashboard'">
+                    <span class="sr-only">Toggle navigation</span> Dashboard <i class="fa fa-bars"></i>
+                </button>
+                <button type="button" onclick="logout()">
+                    <span class="sr-only">Toggle navigation</span> LOGOUT <i class="fa fa-bars"></i>
+                </button>
+            </div>
+            <div id="mySidenav" class="sidenav">
+                <div content="menuContentHTML"></div>
+            </div>
+        </div>
+        <div class="container">
+            <br>
+            <div id="summary">
+                Please fill out the following to create a new organization.<br><br>
+
+                Name:<br>
+                <div class="required">
+                    <input class="textInsideRequired" type="text" id="name">*
+                </div>
+                <br>
+
+                Description:<br>
+                <div class="required">
+                    <textarea class="textInsideRequired" id="orgDescription"></textarea>*
+                </div>
+                <br><br>
+
+                <button id="submitOrgButton" onclick="sendOrg()">
+                    <span class="sr-only">Toggle navigation</span> Create Organization<i class="fa fa-bars"></i>
+                </button>
+            </div>
         </div>
     </div>
 </div>

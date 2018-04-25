@@ -14,41 +14,119 @@
     <asset:javascript src="eventCreation.js"/>
     <asset:stylesheet src="calendarView.css"/>
     <asset:stylesheet src="eventCreation.css"/>
+    <asset:stylesheet src="menuButton.css"/>
+    <asset:javascript src="menuButton.js"/>
 
 </head>
 <body>
 <div class="intro-header">
-    <div class="container">
+    <div>
         <div id="headerGrad">
             <div id="title">
                 Create an Event
             </div>
-            <button type="button" onclick="document.location.href='../dashboard'">
-                <span class="sr-only">Toggle navigation</span> Dashboard <i class="fa fa-bars"></i>
-            </button>
+            <span class="otherTitleContent" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+            <br><br><br><br><br><br><br>
+            <div class="otherTitleContent">
+                <button type="button" onclick="document.location.href='../dashboard'">
+                    <span class="sr-only">Toggle navigation</span> Dashboard <i class="fa fa-bars"></i>
+                </button>
+                <button type="button" onclick="logout()">
+                    <span class="sr-only">Toggle navigation</span> LOGOUT <i class="fa fa-bars"></i>
+                </button>
+            </div>
+            <div id="mySidenav" class="sidenav">
+                <div content="menuContentHTML"></div>
+            </div>
         </div>
+        <div class="container">
+            <div id="userOrgToggle">
+                <br>
+                <br>
+                Please fill out the following Form to create an event.
 
-        <div id="userOrgToggle">
-            <br>
-            <br>
-            Please fill out the following Form to create an event.
+                <br><br>
+                <button onclick="toggleOrgDropdown()" id="organizationEventButton" value="false">
+                    <span class="sr-only">Toggle navigation</span> Create an Organization Event<i class="fa fa-bars"></i>
+                </button>
 
-            <br><br>
-            <button onclick="toggleOrgDropdown()" id="organizationEventButton">
-                <span class="sr-only">Toggle navigation</span> Create an Organization Event<i class="fa fa-bars"></i>
-            </button>
-
-            <br><br>
-            <div id="orgDropdown">
-                <div class="dropdown">
-                    Choose the organization you wish to create an event for from the drop down menu.<br>
-                    <button onclick="organizationDropdown()" class="dropbtn">My Organizations</button>
-                    <div id="myDropdown" class="dropdown-content">
-                        <a href="#home">Home</a>
-                        <a href="#about">About</a>
-                        <a href="#contact">Contact</a>
-                    </div>
+                <br><br>
+                <!--
+                 <div id="orgDropdown">
+                 <div class="dropdown">
+                        Choose the organization you wish to create an event for from the drop down menu.<br>
+                        <button onclick="organizationDropdown()" class="dropbtn">My Organizations</button>
+                       <div id="myDropdown" class="dropdown-content">
+                           <div id="orgList"></div>
+                       </div>
+                  </div>
                 </div>
+                -->
+
+                <div id="orgDropdown" class="required">
+                    <div class="textInsideRequired">
+                        Enter the id of the organization you would like to create an event for:
+                    </div>
+                   <input class="textInsideRequired" type="text" name="orgId">&nbsp;*
+                </div>
+                <br>
+
+                Event Name:<br>
+                <div class="required">
+                    <input class="textInsideRequired" type="text" id="name">&nbsp;*
+                </div>
+                <br>
+
+                Description:<br>
+                <textarea name="description" id="eventDescription" rows="4" cols="50"></textarea>
+                <br><br>
+
+                Starting Date:<br>
+                Enter the number value of the month the event will start:<br>
+                <input type="text" id="startingMonth"><br>
+                Enter the number of the day the event is due:<br>
+                <input type="text" id="startingDay"><br>
+                Enter the full four digit year the event is due:<br>
+                <input type="text" id="startingYear">
+                <br><br>
+
+                Due Date:<br>
+                Enter the number value of the month the event is due:<br>
+                <div class="required">
+                    <input class="textInsideRequired" type="text" id="dueMonth">*
+                </div>
+                Enter the number of the day the event is due:<br>
+                <div class="required">
+                    <input class="textInsideRequired" type="text" id="dueDay">*
+                </div>
+                Enter the full four digit year the event is due:<br>
+                <div class="required">
+                    <input class="textInsideRequired" type="text" id="dueYear">*
+                </div>
+                <br>
+
+                Hour Due:<br>
+                <input type="text" id="dueHour">
+                <br><br>
+
+                Minute Due:<br>
+                <input type="text" id="dueMinute">
+                <br><br>
+
+                Color:<br>
+                <input type="color" value="#00bdff" id="color">
+                <br><br>
+
+                <div id="privacyRadio">
+                    Privacy:<br>
+                    <input class="textInsideRequired" type="radio" name="privacyString" value="false" checked> Private<br>
+                    <input class="textInsideRequired" type="radio" name="privacyString" value="true"> Public<br>
+                    <br><br>
+                </div>
+                <button id="submitEventButton" onclick="sendEvent()">
+                    <span class="sr-only">Toggle navigation</span> Create Event<i class="fa fa-bars"></i>
+                </button>
+                <br><br><br><br>
             </div>
         </div>
     </div>
