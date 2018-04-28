@@ -1,6 +1,6 @@
 import organizer.Event
 
-model{
+model {
     Event event
 }
 

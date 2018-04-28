@@ -328,20 +328,16 @@ class EventService {
             List<Event> monthEvents = new ArrayList<>()
             int month = 0
 
-            if (userEvents.size() != 0) {
-                if (monthString != null) {
-                    month = monthString.isInteger() ? monthString.toInteger() : -1
-                    for (event in userEvents) {
-                        if (event.dueMonth == month)
-                            monthEvents.add(event)
-                    }
-                    if(monthEvents.size() == 0)
-                        result.message = "The user doesn't have any events stored."
-                    result.data = monthEvents
-                    result
-                } else {
-                    QueryResult.fromHttpStatus(HttpStatus.BAD_REQUEST, result)
+            if (monthString != null) {
+                month = monthString.isInteger() ? monthString.toInteger() : -1
+                for (event in userEvents) {
+                    if (event.dueMonth == month)
+                        monthEvents.add(event)
                 }
+                if(monthEvents.size() == 0)
+                    result.message = "The user doesn't have any events stored."
+                result.data = monthEvents
+                result
             } else {
                 QueryResult.fromHttpStatus(HttpStatus.BAD_REQUEST, result)
             }

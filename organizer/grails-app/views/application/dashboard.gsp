@@ -28,7 +28,7 @@
                         <div id="title" onclick="getEvents()">
                             Dashboard
                         </div>
-                        <span class="otherTitleContent" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+                        <span id="userImage" class="otherTitleContent" style="font-size:10px;cursor:pointer" onclick="openNav()">MENU:</span>
                         <br><br><br><br><br><br><br>
                         <div class="otherTitleContent">
                             <button type="button" onclick="document.location.href='../createEvent'">
@@ -50,7 +50,7 @@
                     <div class="container">
                         <p>&nbsp</p>
                         <div id="current_month">&nbsp;</div>
-                        <div id="show_calendar" onclick="addEvents()">&nbsp;</div>
+                        <div id="show_calendar">&nbsp;</div>
                     </div>
                 </div>
             </div>

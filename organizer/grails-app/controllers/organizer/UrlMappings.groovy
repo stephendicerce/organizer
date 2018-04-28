@@ -20,7 +20,11 @@ class UrlMappings {
         "/user/auth"(controller: 'auth', action: 'current', method: 'get')
         "/user/logout"(controller: 'auth', action: 'logout', method: 'post')
 
-        "/api/user"(controller: 'user', action: 'getUser', method: 'get')
+        group "/api/user", {
+            "/"(controller: 'user', action: 'getUser', method: 'get')
+            "/follow"(controller: 'user', action: 'followUser', method:'post')
+            "/following"(controller: 'user', action: 'getFollowing', method: 'get')
+        }
 
         group "/api/organization", {
             "/"(controller: 'organization', action: 'putOrganization', method: 'put')

@@ -15,6 +15,8 @@
     <asset:stylesheet src="menuButton.css"/>
     <asset:javascript src="menuButton.js"/>
     <asset:javascript src="myOrganizations.js"/>
+    <asset:javascript src="getUserPicture.js"/>
+
 </head>
 
 <body>
@@ -24,7 +26,7 @@
             <div id="title">
                 My Organizations
             </div>
-            <span class="otherTitleContent" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+            <span id="userImage" class="otherTitleContent" style="font-size:10px;cursor:pointer" onclick="openNav()">MENU:</span>
             <br><br><br><br><br><br><br>
             <div class="otherTitleContent">
                 <button type="button" onclick="document.location.href='../dashboard'">
@@ -39,11 +41,19 @@
             </div>
         </div>
         <div class="container">
-
-            <div onclick="getAllOrganizations()">
-                Click here to view your organizations:
+            <div>
+                <div id="orgList"></div>
+                <br>
+                <div id="addUserDiv"></div>
+                <br>
+                <div id="userList"></div>
+                <br>
+                <div id="orgAdded"></div>
             </div>
-            <div id="orgList"></div>
+            <br><br><br><br><br><br><br><br>
+            <div>
+                <div id="orgUsers"></div>
+            </div>
         </div>
     </div>
 </div>

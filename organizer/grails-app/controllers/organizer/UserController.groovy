@@ -39,7 +39,7 @@ class UserController {
         if(checks.success) {
             QueryResult<User> result = userService.createUser(email)
             if(result.success) {
-                render(view: 'users', model: [token: checks.data, users: [result.data]])
+                render(view: 'users', model: [token: checks.data, users: result.data])
             } else {
                 render(view: '../failure', model: [errorCode: result.errorCode, message: result.message])
             }
@@ -48,5 +48,35 @@ class UserController {
         }
     }
 
+    def followUser(String accessToken, String userId) {
+        def require = preconditionService.notNull(params, ['accessToken', 'userId'])
+        def token = preconditionService.accessToken(accessToken, require).data
+        if(require.success) {
+            QueryResult<List<User>> result = userService.followUser(token, userId)
+            if(result.success) {
+                render(view: 'users', model: [token: token, users: result.data])
+            } else {
+                render(view: '../failure', model: [errorCode: result.errorCode, message: result.message])
+            }
+        } else {
+            render(view: '../failure', model: [errorCode: require.errorCode, message: require.message])
+        }
+    }
 
+    def getFollowing(String accessToken) {
+        def require = preconditionService.notNull(params, ['accessToken'])
+        def token = preconditionService.accessToken(accessToken, require).data
+
+        if(require.success) {
+            def result = userService.getUsersThatYouAreFollowing(token)
+
+            if(result.success) {
+                render(view: 'users', model: [token: token, users: result.data])
+            } else {
+                render(view: '../failure', model: [errorCode: result.errorCode, message: result.message])
+            }
+        } else {
+            render(view: '../failure', model: [errorCode: require.errorCode, message: require.message])
+        }
+    }
 }

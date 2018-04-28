@@ -6,7 +6,8 @@ var eventMonth;
 var numberOfDays;
 var actual_month;
 var month_listing;
-var actual_calendar
+var actual_calendar;
+var applicationUser;
 
 Date.prototype.getMonthNames = function() {
     return [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
@@ -43,7 +44,7 @@ Date.prototype.calendar = function() {
         } else {
             id = 'id="day'+j+'"';
         }
-        calendarTable += '<td class="dayBlock" ' + id + '>' + j+'</td>'; border++;
+        calendarTable += '<td class="dayBlock" ' + id + '>' + j +'</td>'; border++;
 
         if ((( border % 7 ) === 0 ) && ( j < numberOfDays )) {
             calendarTable += '<tr></tr>';
@@ -56,7 +57,28 @@ Date.prototype.calendar = function() {
     return calendarTable;
 };
 
-window.onload = function() {
+$(function() {
+
+    $.ajax({
+       url: 'user/auth',
+       method: 'GET',
+
+        success: function (data) {
+            token = data.data.token;
+            applicationUser =  data.data.user;
+            console.log(applicationUser);
+
+            var userImageDiv = document.getElementById("userImage");
+            var newDiv = document.createElement("div");
+            newDiv.innerHTML = '<img src="'+applicationUser.userImageUrl+'" class="img-circle" style="width: 60%">';
+            userImageDiv.appendChild(newDiv);
+
+        },
+        error: function () {
+            alert("Could not locate user.");
+            window.location.href = '/'
+        }
+    });
     var selected_month = '<form name="month_holder">';
     selected_month += '<select id="month_items" size="1" onchange="month_picker();">';
     for ( var x = 0; x <= today.getMonthNames().length; x++ ) { selected_month += '<option value="' + today.getMonthNames()[x] + ' 1, ' + today.getFullYear() + '">' + today.getMonthNames()[x] + '</option>'; }
@@ -67,22 +89,25 @@ window.onload = function() {
     month_listing.innerHTML = selected_month;
     actual_month = document.getElementById('month_items');
     actual_month.selectedIndex = month;
+    eventMonth = today.getMonth()+1;
+    console.log('INITIAL EVENT MONTH: '+ eventMonth);
+    getEvents();
     console.log("done")
     //addEvents()
-};
-
+});
 
 //--> Month Picker <--\\
 function month_picker() {
     var month_menu = new Date(actual_month.value);
     actual_calendar.innerHTML = month_menu.calendar();
+    eventMonth = month_menu.getMonth()+1;
+    console.log('NEW EVENT MONTH: ' + eventMonth);
+    getEvents()
 }
 
-var monthFullDate
+var monthFullDate;
 
 function getEvents() {
-     monthFullDate= new Date(actual_month.value);
-    eventMonth = 4;
     $.ajax({
         url: '/user/auth',
         method: "GET",
@@ -90,11 +115,14 @@ function getEvents() {
             token = data.data.token;
 
             $.ajax({
-                url:'api/event/user/month?accessToken='+token+'&monthString=4',
+                url:'api/event/user/month?accessToken='+token+'&monthString='+eventMonth,
                 method: "GET",
                 success: function (data) {
                     userEvents = data.data.userEvents;
-                    console.log(userEvents)
+                    if(userEvents.length > 0) {
+                        console.log(userEvents);
+                        addEvents()
+                    }
                 },
                 error: function () {
                     alert("it didn't work.")
@@ -109,29 +137,38 @@ function getEvents() {
 
 function addEvents() {
     var days = [];
+    var eventToBeAdded;
     for(var i=1; i<=numberOfDays; i++) {
+        var newDiv = document.createElement("div");
         if(today.getDate() !== i) {
             days[i-1] = document.getElementById("day" + i);
         } else {
             days[i-1] = document.getElementById("current_day")
         }
-        days[i-1].innerHTML = insertEventsIntoCalendar(i)
+
+
+
+        for (var eventNumber=0; eventNumber<userEvents.length;eventNumber++) {
+            if(userEvents[eventNumber].dueDay === i){
+                eventToBeAdded=userEvents[eventNumber];
+                console.log("EVENT TO BE ADDED:");
+                console.log(eventToBeAdded);
+                newDiv.innerHTML = insertEventsIntoCalendar(i, eventToBeAdded);
+                days[i-1].appendChild(newDiv)
+            }
+        }
+
 
     }
 
 }
 
-function insertEventsIntoCalendar(i) {
+function insertEventsIntoCalendar(i, eventToBeAdded) {
     var eventString;
-    //console.log(dayBox.id);
-    //console.log(userEvents.length);
-    for(var j=0; j<userEvents.length; j++){
-        eventString = i;
-        //console.log('dueDay:' + userEvents[j].dueDay +' | i: '+ i);
-        if(userEvents[j].dueDay === i){
-            eventString += '<div id="'+j+'" class="eventDiv">'+ userEvents[j].eventName +'</div>';
-        }
-    }
+    var eventColor = '#';
+    eventColor +=eventToBeAdded.eventColor;
+            eventString = '<div class="eventDiv" style="color: '+eventColor+'">'+ eventToBeAdded.eventName +'</div>';
+
     return eventString
 
 }

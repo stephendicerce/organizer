@@ -17,6 +17,7 @@
     <asset:stylesheet src="eventCreation.css"/>
     <asset:stylesheet src="menuButton.css"/>
     <asset:stylesheet src="organizationCreation.css"/>
+    <asset:javascript src="getUserPicture.js"/>
 
 </head>
 <body>
@@ -26,7 +27,7 @@
             <div class="orgTitle">
                 Create an Organization
             </div>
-            <span class="otherTitleContent" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+            <span id="userImage" class="otherTitleContent" style="font-size:10px;cursor:pointer" onclick="openNav()">MENU:</span>
             <br><br><br><br><br><br><br>
             <div class="otherTitleContent">
                 <button type="button" onclick="document.location.href='../dashboard'">

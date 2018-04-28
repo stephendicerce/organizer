@@ -14,6 +14,8 @@
     <asset:stylesheet src="calendarView.css"/>
     <asset:stylesheet src="menuButton.css"/>
     <asset:javascript src="menuButton.js"/>
+    <asset:javascript src="findFriends.js"/>
+    <asset:javascript src="getUserPicture.js"/>
 </head>
 
 <body>
@@ -23,7 +25,7 @@
             <div id="title">
                 Find Friends
             </div>
-            <span class="otherTitleContent" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+            <span id="userImage" class="otherTitleContent" style="font-size:10px;cursor:pointer" onclick="openNav()">MENU:</span>
             <br><br><br><br><br><br><br>
             <div class="otherTitleContent">
                 <button type="button" onclick="document.location.href='../dashboard'">
@@ -40,18 +42,21 @@
 
         <div class="container">
             <div>
-                Either enter the user's full name, or email to find a friend.<br><br>
+                Either enter the user's name to find a friend.<br><br>
 
                 Fist Name:<br>
                 <input type="text" id="firstName"><br>
                 Last Name:<br>
-                <input type="text" id="Last Name"><br><br>or<br><br>
+                <input type="text" id="Last Name"><br><br>
+                <!--
+                or<br><br>
                 Email:<br>
                 <input type="text" id="email">
                 <br><br>
+                -->
 
-                <button id="submitEventButton" onclick="sendEvent()">
-                    <span class="sr-only">Toggle navigation</span> Create Event<i class="fa fa-bars"></i>
+                <button id="submitEventButton" onclick="findUsers()">
+                    <span class="sr-only">Toggle navigation</span> Find Users<i class="fa fa-bars"></i>
                 </button>
                 <br><br><br><br>
             </div>

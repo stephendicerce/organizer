@@ -12,17 +12,20 @@
     <asset:javascript src="auth/config.js"/>
     <asset:javascript src="auth/logout.js"/>
     <asset:stylesheet src="menuButton.css"/>
+    <asset:stylesheet src="calendarView.css"/>
     <asset:javascript src="menuButton.js"/>
-    <asset:javascript src="myEvents.js"/>
+    <asset:javascript src="myFollowers.js"/>
+    <asset:javascript src="getUserPicture.js"/>
+
 </head>
 
 <body>
 <div class="intro-header">
     <div id="headerGrad">
         <div id="title">
-            My Events
+            My Friends
         </div>
-        <span class="otherTitleContent" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+        <span id="userImage" class="otherTitleContent" style="font-size:10px;cursor:pointer" onclick="openNav()">MENU:</span>
         <br><br><br><br><br><br><br>
         <div class="otherTitleContent">
             <button type="button" onclick="document.location.href='../dashboard'">
@@ -37,17 +40,10 @@
         </div>
     </div>
     <div class="container">
-        <div id="pageSummary" onclick="getAllEvents()">
-            Click here to view your events:
-        </div>
-        <div id="eventList">
-
-        </div>
-        <div class="container">
-            <div id="editEventDiv"></div>
-        </div>
+        <div id="usersListSummary" style="display: none">You currently follow these users:</div>
+        <div id="userList"></div>
+        <br><br>
     </div>
-    <br><br>
 
 </div>
 </body>

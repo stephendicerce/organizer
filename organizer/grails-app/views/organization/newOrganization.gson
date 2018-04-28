@@ -9,6 +9,6 @@ json {
     status "success"
     data {
         accessToken : organization.orgOwner.authToken.accessToken
-        organization g.render(template: "/templates/organization", model: [organization:organization])
+        userOrg g.render(template: "/templates/organization", model: [organization:organization])
     }
 }

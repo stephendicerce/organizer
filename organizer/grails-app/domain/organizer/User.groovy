@@ -13,7 +13,7 @@ class User {
     static hasMany = [following: User]
 
     static mapping = {
-       /* table "users"
+       /* table "applicationUsers"
         version false*/
     }
     static constraints = {

@@ -2,6 +2,10 @@ var userEvents = [];
 var token = '';
 
 
+$(function () {
+   getAllEvents()
+});
+
 function getAllEvents() {
     $.ajax({
         url: '/user/auth',
@@ -21,7 +25,7 @@ function getAllEvents() {
                     var eventsDiv = document.getElementById("eventList");
                     if(userEvents.length === 0) {
                         var string = "<p style=\"text-align: center;\">You currently have no stored events.</p>";
-                        var div = document.createElement("div")
+                        var div = document.createElement("div");
                         div.innerHTML = string;
                         eventsDiv.appendChild(div);
                     }
@@ -113,7 +117,6 @@ var isPublic;
 function editEvent(eventId) {
     var userEvents = document.getElementById("eventList");
     userEvents.style.display = "none";
-    document.getElementById("pageSummary").style.display = "none";
     var eventToBeEdited;
 
 

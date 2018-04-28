@@ -200,19 +200,21 @@ class OrganizationService {
 
         if(requestingUser != null) {
             Organization organization = Organization.findById(oID)
+            println "ORG ID: "+organization.id
+            println "NUMBER OF USERS IN ORGANIZATION: "+organization.users.size()
 
             if(organization != null) {
                 if(isInOrganization(organization, requestingUser)) {
                     //List<User> orgAdmins = organization.admins
 
-                   /* Set<User> users = organization.users
+                   /* Set<User> applicationUsers = organization.applicationUsers
                     List<User> orgUsers = new ArrayList<>()
                     println organization.orgOwner.firstName
                     User orgOwner = organization.orgOwner
                     println isOrganizationOwner(organization, orgOwner)
 
 
-                    for(user in users) {
+                    for(user in applicationUsers) {
                         orgUsers.add(user)
                     }
 

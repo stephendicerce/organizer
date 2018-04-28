@@ -136,6 +136,7 @@ class OrganizationController {
             def result = organizationService.getAllOrganizationUsers(token, orgId)
 
             if(result.success) {
+                println "USER INFO: user Id:" + result.data[0].id + "\n        user Name: " + result.data[0].firstName + " " + result.data[0].lastName + "\n        user Email: " + result.data[0].email
                 render(view: 'userList', model: [token: token, users: result.data])
             } else {
                 render(view: '../failure', model: [errorCode: result.errorCode, message: result.message])

@@ -4,7 +4,6 @@ import grails.gorm.transactions.Transactional
 import org.springframework.http.HttpStatus
 import util.Pair
 import util.QueryResult
-import util.RoleType
 
 @Transactional
 class UserService {
@@ -14,7 +13,11 @@ class UserService {
         final static String USER_NOT_FOUND = "User not found with given token"
     }
 
-
+    /**
+     *
+     * @param token
+     * @return
+     */
     QueryResult<User> getUser(String token) {
         QueryResult queryResult = new QueryResult()
         queryResult.success = false
@@ -47,8 +50,16 @@ class UserService {
         return user
     }
 
-    Optional<Pair<User, AuthToken>> getMakeOrUpdate(String subj, String first, String last,
-                                                    String imageUrl, String email) {
+    /**
+     *
+     * @param subj
+     * @param first
+     * @param last
+     * @param imageUrl
+     * @param email
+     * @return
+     */
+    Optional<Pair<User, AuthToken>> getMakeOrUpdate(String subj, String first, String last, String imageUrl, String email) {
         User user
         AuthToken token
         Calendar calendar
@@ -95,6 +106,13 @@ class UserService {
 
     }
 
+    /**
+     *
+     * @param first
+     * @param last
+     * @param email
+     * @return
+     */
     QueryResult<List<User>> findUsersBy(String first, String last, String email) {
         QueryResult<List<User>> result
 
@@ -118,6 +136,11 @@ class UserService {
         result
     }
 
+    /**
+     *
+     * @param email
+     * @return
+     */
     QueryResult<User> createUser(String email) {
         QueryResult<User> result
         if(User.findByEmail(email) == null) {
@@ -132,6 +155,11 @@ class UserService {
         result
     }
 
+    /**
+     *
+     * @param token
+     * @return
+     */
     QueryResult<User> findUser(AuthToken token) {
         QueryResult<User> result = new QueryResult<>()
         User user = token?.user
@@ -140,6 +168,71 @@ class UserService {
         }
         result.data = user
         result
+    }
+
+    /**
+     *
+     * @param token
+     * @param userIdString
+     * @return
+     */
+    QueryResult<List<User>> followUser(AuthToken token, String userIdString) {
+        QueryResult<List<User>> result = new QueryResult<>(success: true)
+        Long userId = userIdString.isLong() ? userIdString.toLong() : -1
+        User requestingUser = token?.user
+
+        if(requestingUser != null) {
+            if (userId != requestingUser.id) {
+                for (user in requestingUser.following) {
+                    if (user.id == userId) {
+                        result = new QueryResult<>(success: false, errorCode: HttpStatus.BAD_REQUEST.value(), message: "Already following this user")
+                        result
+                    }
+                }
+                User newUser = User.findById(userId)
+                if(newUser != null) {
+                    requestingUser.following.add(newUser)
+
+
+                    requestingUser.save(flush:true, failOnError: true)
+
+
+                    result.data = requestingUser.following
+                } else {
+                    result = new QueryResult<>(success: false, errorCode: HttpStatus.BAD_REQUEST.value(), message: "User not found")
+                }
+            } else {
+                result = new QueryResult<>(success: false, errorCode: HttpStatus.BAD_REQUEST.value(), message: "You can not follow yourself.")
+            }
+        } else {
+            result = new QueryResult<>(success: false, errorCode: HttpStatus.UNAUTHORIZED.value(), message: "Access Token does not match any known applicationUsers, check your log in status.")
+        }
+         return result
+    }
+
+    /**
+     *
+     * @param token
+     * @return
+     */
+    QueryResult<List<User>> getUsersThatYouAreFollowing(AuthToken token) {
+       QueryResult<List<User>> result = new QueryResult<>(success: true)
+        User requestingUser = token?.user
+
+        if(requestingUser != null) {
+            //List<User> users = requestingUser.following
+            for(user in requestingUser.following){
+                println user.firstName
+                println user.lastName
+                println user.email
+                println user.imageUrl
+            }
+
+            result.data = requestingUser.following
+        } else {
+            QueryResult.fromHttpStatus(HttpStatus.UNAUTHORIZED, result)
+        }
+         return result
     }
 
 }

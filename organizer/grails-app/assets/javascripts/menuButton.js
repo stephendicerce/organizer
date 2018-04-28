@@ -18,7 +18,9 @@ function openNav() {
         document.getElementById("mySidenav").innerHTML = findFriendsMenuContentHTML;
     }else if (document.location.pathname === "/help") {
         document.getElementById("mySidenav").innerHTML = helpMenuContentHTML;
-    }
+    }else if (document.location.pathname === "/following") {
+    document.getElementById("mySidenav").innerHTML = followingMenuContentHTML;
+}
 }
 
 function closeNav() {
@@ -31,6 +33,7 @@ var landingMenuContentHTML = '<a href="javascript:void(0)" class="closebtn" oncl
     '<a href="../faqs">FAQs</a>';
 
 var dashboardMenuContentHTML = '<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times </a>' +
+    '<a href="../following">My Friends</a>' +
     '<a href="../findFriends">Find Friends</a>' +
     '<a href="../myEvents">My Events</a>' +
     '<a href="../createEvent">Create Event</a>' +
@@ -40,6 +43,7 @@ var dashboardMenuContentHTML = '<a href="javascript:void(0)" class="closebtn" on
 
 var createEventMenuContentHTML = '<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times </a>' +
     '<a href="../dashboard">Dashboard</a>' +
+    '<a href="../following">My Friends</a>' +
     '<a href="../findFriends">Find Friends</a>' +
     '<a href="../myEvents">My Events</a>' +
     '<a href="../myOrganizations">My Organizations</a>\n' +
@@ -48,6 +52,7 @@ var createEventMenuContentHTML = '<a href="javascript:void(0)" class="closebtn" 
 
 var createOrganizationMenuContentHTML = '<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times </a>' +
     '<a href="../dashboard">Dashboard</a>' +
+    '<a href="../following">My Friends</a>' +
     '<a href="../findFriends">Find Friends</a>' +
     '<a href="../myEvents">My Events</a>' +
     '<a href="../createEvent">Create Event</a>' +
@@ -56,6 +61,7 @@ var createOrganizationMenuContentHTML = '<a href="javascript:void(0)" class="clo
 
 var myEventsMenuContentHTML = '<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times </a>' +
     '<a href="../dashboard">Dashboard</a>' +
+    '<a href="../following">My Friends</a>' +
     '<a href="../findFriends">Find Friends</a>' +
     '<a href="../createEvent">Create Event</a>' +
     '<a href="../myOrganizations">My Organizations</a>\n' +
@@ -64,6 +70,7 @@ var myEventsMenuContentHTML = '<a href="javascript:void(0)" class="closebtn" onc
 
 var myOrganizationsMenuContentHTML = '<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times </a>' +
     '<a href="../dashboard">Dashboard</a>' +
+    '<a href="../following">My Friends</a>' +
     '<a href="../findFriends">Find Friends</a>' +
     '<a href="../myEvents">My Events</a>' +
     '<a href="../createEvent">Create Event</a>' +
@@ -72,10 +79,20 @@ var myOrganizationsMenuContentHTML = '<a href="javascript:void(0)" class="closeb
 
 var findFriendsMenuContentHTML = '<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times </a>' +
     '<a href="../dashboard">Dashboard</a>' +
+    '<a href="../following">My Friends</a>' +
+    '<a href="../myEvents">My Events</a>' +
+    '<a href="../createEvent">Create Event</a>' +
+    '<a href="../myOrganizations">My Organizations</a>' +
+    '<a href="../createOrganization"> Create An Organization</a>' +
+    '<a href="../help">Help</a>';
+
+var followingMenuContentHTML = '<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times </a>' +
+    '<a href="../dashboard">Dashboard</a>' +
+    '<a href="../findFriends">Find Friends</a>' +
     '<a href="../myEvents">My Events</a>' +
     '<a href="../createEvent">Create Event</a>' +
     '<a href="../myOrganizations">My Organizations</a>\n' +
-    '<a href="../createOrganization"> Create An Organization</a>' +
+    '<a href="../createOrganization">Create An Organization</a>' +
     '<a href="../help">Help</a>';
 
 var helpMenuContentHTML = '<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times </a>' +

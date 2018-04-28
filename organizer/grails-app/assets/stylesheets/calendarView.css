@@ -13,6 +13,7 @@
 
 }
 
+
 #title{
     font-size: 10vmin;
     color: white;
@@ -64,6 +65,6 @@
 }
 
 #current_day {
-    background-color: rgb(0,189,255);
+    background-color: rgb(168, 168, 168);
     font-weight: bold;
 }
