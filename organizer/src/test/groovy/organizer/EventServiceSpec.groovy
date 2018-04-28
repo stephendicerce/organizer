@@ -1,9 +1,9 @@
 package organizer
 
-import grails.testing.gorm.DomainUnitTest
+import grails.testing.services.ServiceUnitTest
 import spock.lang.Specification
 
-class CalenderSpec extends Specification implements DomainUnitTest<Calender> {
+class EventServiceSpec extends Specification implements ServiceUnitTest<EventService>{
 
     def setup() {
     }

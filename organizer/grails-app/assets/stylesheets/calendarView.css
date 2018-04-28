@@ -1,0 +1,70 @@
+#viewBorder {
+    width: auto;
+}
+
+#headerGrad {
+    height: 180px;
+    border-style: inset;
+    background: rgb(0, 189, 255); /*for browsers without gradient support*/
+
+    background: linear-gradient(to right, rgb(0,189, 255), white);
+
+
+
+}
+
+
+#title{
+    font-size: 10vmin;
+    color: white;
+    width: 60%;
+    float: left;
+}
+
+.otherTitleContent {
+    float: right;
+}
+
+
+#month {
+    text-align: center;
+    font-size: 50px;
+    color: rgb(0,189,255);
+}
+
+#description {
+    font-size: large;
+    text-align: center;
+    width: 430px;
+    height: 80px;
+    position: absolute;
+    margin: 220px;
+    color: white;
+    background-color: rgba(71, 71, 71, .70);
+}
+
+.dayBlock {
+    border-style: solid;
+    width: 180px;
+    height: 100px;
+    text-align: start;
+}
+
+.nextMonthDayBlock {
+    border-style: solid;
+    width: 180px;
+    height: 100px;
+    color: rgb(168, 168, 168);
+}
+
+.titleColumn {
+    border-style: solid;
+    width: 180px;
+    text-align: center;
+    font-size: .25in;
+}
+
+#current_day {
+    background-color: rgb(168, 168, 168);
+    font-weight: bold;
+}

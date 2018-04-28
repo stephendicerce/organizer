@@ -1,9 +1,9 @@
 package organizer
 
-import grails.testing.gorm.DomainUnitTest
+import grails.testing.web.controllers.ControllerUnitTest
 import spock.lang.Specification
 
-class RoleSpec extends Specification implements DomainUnitTest<Role> {
+class EventControllerSpec extends Specification implements ControllerUnitTest<EventController> {
 
     def setup() {
     }

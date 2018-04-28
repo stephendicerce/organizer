@@ -1,7 +1,7 @@
 import organizer.User
 
 model {
-    Collection<User> users = []
+    Collection<User> applicationUsers = []
 }
 
-json tmpl.'/templates/user'(users)
+json tmpl.'/templates/user'(applicationUsers)

@@ -1,11 +1,10 @@
 package organizer
 
-class Calender {
+class Calendar {
 
 
 
     static hasMany = [events: Event]
-    static belongsTo = [user: User]
     static constraints = {
 
 

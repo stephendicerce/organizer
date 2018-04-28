@@ -11,8 +11,7 @@ model {
 json {
     status "success"
     data {
-        accessToken token.accessToken
-        organizationId organizationID
-        users g.render(template: "templates/users", model: [users:users])
+        token token.accessToken
+        users g.render(template: "/templates/users", model: [applicationUsers: users])
     }
 }

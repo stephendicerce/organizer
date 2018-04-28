@@ -13,34 +13,51 @@
     <asset:javascript src="auth/config.js"/>
     <asset:javascript src="auth/login.js"/>
     <asset:javascript src="auth/logout.js"/>
-
+    <asset:javascript src="calendarFunctionalityWithoutEvents.js"/>
+    <asset:javascript src="menuButton.js"/>
+    <asset:stylesheet src="menuButton.css"/>
+    <asset:stylesheet src="calendarView.css"/>
     <style>
 
-    .data{
-        display: none;
-    }
-</style>
+        .data{
+            display: none;
+        }
+    </style>
 
 
 </head>
-<title>Organizer</title>
+<title>Sked</title>
 <body class="bg-light-gray">
 <div class="intro-header">
     <div class="container">
 
         <div class="row">
             <div class="col-lg-12">
+                <div id="viewBorder">
                 <div class="intro-message">
-                    <h1>Sked</h1>
-                    <h3>An everyday task manager to be used by you and your friends. Keep up to date with everyone's plans, as well as keeping on schedule with your own.</h3>
-                    <div align="center" id="sign-in-btn"></div>
-                    <div class="data">
-                        <p>Profile Details</p>
-                        <img id="pic" class="img-circle" width="100" height="100"/>
-                        <p>Email Address</p>
-                        <p id="email" class="alert alert-danger"></p>
-                        <button onclick="signOut()" class="btn btn-danger">Sign Out</button>
+                        <div id="headerGrad">
+                            <span id="title">
+                                SKED
+                            </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span class="otherTitleContent" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span><br><br><br><br><br><br>
+                            <span class="otherTitleContent">
+                                <div id="sign-in-btn"></div>
+                            </span>
+
+                            <div id="mySidenav" class="sidenav">
+                                <div content="menuContentHTML"></div>
+                            </div>
+
+                        </div>
+                </div>
+                    <div id="description">
+                        An everyday task manager to be used by you and your friends.
+                        Keep up to date with everyone's plans, as well as keeping on
+                        schedule with your own.
                     </div>
+                    <p>&nbsp</p>
+                    <div id="show_calendar">&nbsp;</div>
                 </div>
             </div>
         </div>

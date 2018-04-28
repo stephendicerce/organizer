@@ -6,13 +6,14 @@ class User {
     String lastName
     String email
     String imageUrl
+    Calendar calendar
 
-    static hasOne = [authToken: AuthToken, role: Role]
+    static hasOne = [authToken: AuthToken]
 
-    static hasMany = [friends: User]
+    static hasMany = [following: User]
 
     static mapping = {
-       /* table "users"
+       /* table "applicationUsers"
         version false*/
     }
     static constraints = {
