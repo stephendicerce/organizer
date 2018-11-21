@@ -4,4 +4,4 @@
 A cross platform planner/organizer application. 
 
 ## Note:
-This version of Sked is no longer being supported. This version is completely runnable and usable, however Sked v2.0 is being redesigned [here](www.google.com). Please check for updates there. 
+This version of Sked is no longer being supported. This version is completely runnable and usable, however Sked v2.0 is being redesigned [here](http://google.com). Please check for updates there. 
